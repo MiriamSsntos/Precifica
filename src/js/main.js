@@ -136,6 +136,13 @@
         let targetA = [200, 226, 168];
         let targetB = [4, 52, 44];
 
+        let frameSkip = 0;
+        let perfTier = "high";
+        let isMobile = window.innerWidth < 768;
+        if (isMobile) {
+          perfTier = "low";
+        }
+
         function lerpColor(from, to, t) {
           return from.map((v, i) => Math.round(v + (to[i] - v) * t));
         }
@@ -146,12 +153,13 @@
           speedMult = spd;
         };
 
-        const PARTICLE_COUNT = 22;
+        const PARTICLE_COUNT = isMobile ? 8 : 22;
         const particles = [];
 
         function resize() {
           canvas.width = window.innerWidth;
           canvas.height = window.innerHeight;
+          isMobile = window.innerWidth < 768;
         }
         resize();
         window.addEventListener("resize", resize);
@@ -185,6 +193,11 @@
         for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(randomParticle(false));
 
         function drawGrid() {
+          frameSkip++;
+          if (perfTier === "low" && frameSkip % 2 === 0) {
+            requestAnimationFrame(drawGrid);
+            return;
+          }
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           colorA = lerpColor(colorA, targetA, 0.025);
           colorB = lerpColor(colorB, targetB, 0.025);
@@ -192,7 +205,6 @@
           const ca = colorA.join(",");
           const cb = colorB.join(",");
 
-          // Grade
           ctx.beginPath();
           ctx.strokeStyle = `rgba(${ca},0.022)`;
           ctx.lineWidth = 1;
@@ -206,22 +218,22 @@
           }
           ctx.stroke();
 
-          // Nós de interseção
           const visW = Math.ceil(canvas.width / CELL);
           const visH = Math.ceil(canvas.height / CELL);
-          for (let xi = 0; xi <= visW; xi++) {
-            for (let yi = 0; yi <= visH; yi++) {
-              const hash = (xi * 1000 + yi * 73 + Math.floor(Date.now() / 2000)) % 100;
-              if (hash < 3) {
-                ctx.beginPath();
-                ctx.arc(xi * CELL, yi * CELL, 1.5, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${ca},0.35)`;
-                ctx.fill();
+          if (perfTier !== "low") {
+            for (let xi = 0; xi <= visW; xi++) {
+              for (let yi = 0; yi <= visH; yi++) {
+                const hash = (xi * 1000 + yi * 73 + Math.floor(Date.now() / 2000)) % 100;
+                if (hash < 3) {
+                  ctx.beginPath();
+                  ctx.arc(xi * CELL, yi * CELL, 1.5, 0, Math.PI * 2);
+                  ctx.fillStyle = `rgba(${ca},0.35)`;
+                  ctx.fill();
+                }
               }
             }
           }
 
-          // Partículas com inércia real
           particles.forEach((p, i) => {
             const col = p.useA ? ca : cb;
             const currentGlobalSpeed = window.__dynamicSpeed || speedMult;
@@ -341,12 +353,24 @@
         const nome = document.getElementById("nome").value.trim();
         const email = document.getElementById("email").value.trim();
         const mercado = document.getElementById("mercado").value.trim();
+        const telefone = document.getElementById("telefone").value.trim();
+        const produtos = document.getElementById("produtos").value;
+        const plano = document.getElementById("plano").value;
         const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telRx = /^\(?\d{2,}\)?\s?\d{4,5}-?\d{4}$/;
         let valid = true;
         const errNome = document.getElementById("err-nome");
         const errEmail = document.getElementById("err-email");
         const errMercado = document.getElementById("err-mercado");
+        const errTelefone = document.getElementById("err-telefone");
+        const errProdutos = document.getElementById("err-produtos");
+        const errPlano = document.getElementById("err-plano");
+        const errLgpd = document.getElementById("err-lgpd");
         errNome.style.display = errEmail.style.display = errMercado.style.display = "";
+        if (errTelefone) errTelefone.style.display = "";
+        if (errProdutos) errProdutos.style.display = "";
+        if (errPlano) errPlano.style.display = "";
+        if (errLgpd) errLgpd.style.display = "";
         if (!nome) {
           errNome.style.display = "block";
           valid = false;
@@ -359,14 +383,47 @@
           errMercado.style.display = "block";
           valid = false;
         }
+        if (!telRx.test(telefone)) {
+          if (errTelefone) errTelefone.style.display = "block";
+          valid = false;
+        }
+        if (!produtos || produtos === "Selecione a quantidade...") {
+          if (errProdutos) errProdutos.style.display = "block";
+          valid = false;
+        }
+        if (!plano || plano === "Selecione uma opção...") {
+          if (errPlano) errPlano.style.display = "block";
+          valid = false;
+        }
+        const lgpdChecked = document.getElementById("lgpd-consent").checked;
+        if (!lgpdChecked) {
+          if (errLgpd) errLgpd.style.display = "block";
+          valid = false;
+        }
         if (!valid) return;
         const btn = document.getElementById("form-submit-btn");
-        btn.textContent = "Processando...";
+        btn.classList.add("loading");
         btn.disabled = true;
-        setTimeout(() => {
+        const data = {
+          nome, email, mercado,
+          telefone: document.getElementById("telefone").value.trim(),
+          cidade: document.getElementById("cidade").value.trim(),
+          produtos: document.getElementById("produtos").value,
+          plano: document.getElementById("plano").value,
+          lgpd_consent: true,
+        };
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_key: "SUA_CHAVE_AQUI",
+            ...data,
+          }),
+        }).catch(() => {}).finally(() => {
           document.getElementById("form-area").style.display = "none";
           document.getElementById("success-msg").style.display = "block";
-        }, 800);
+          if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        });
       }
 
       const revealObserver = new IntersectionObserver(
@@ -392,6 +449,61 @@
           card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
         });
       });
+
+// Contador regressivo
+(function () {
+  const cdDays = document.getElementById("cd-days");
+  const cdHours = document.getElementById("cd-hours");
+  const cdMins = document.getElementById("cd-mins");
+  const cdSecs = document.getElementById("cd-secs");
+  if (!cdDays) return;
+  let target = localStorage.getItem("precifica_countdown");
+  if (!target) {
+    target = Date.now() + 14 * 24 * 60 * 60 * 1000;
+    localStorage.setItem("precifica_countdown", target);
+  }
+  function pad(n) { return String(n).padStart(2, "0"); }
+  function tick() {
+    const diff = Math.max(0, +target - Date.now());
+    cdDays.textContent = Math.floor(diff / 86400000);
+    cdHours.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    cdMins.textContent = pad(Math.floor((diff % 3600000) / 60000));
+    cdSecs.textContent = pad(Math.floor((diff % 60000) / 1000));
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// Modal de Login
+function showLoginModal() {
+  document.getElementById('login-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('login-email')?.focus(), 300);
+}
+
+function closeLoginModal(event) {
+  if (event && event.target !== document.getElementById('login-overlay')) return;
+  document.getElementById('login-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('login-overlay');
+    if (overlay.classList.contains('open')) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  if (!email || !password) {
+    alert('Preencha seu e-mail e senha para continuar.');
+    return;
+  }
+  alert('Área do cliente em desenvolvimento. Em breve você poderá acessar o sistema completo do Precifica+ direto daqui!');
+}
 
 // Inicializa os ícones do Lucide
 lucide.createIcons();

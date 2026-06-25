@@ -4,11 +4,90 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Precifica+ — Inteligência Artificial para Gestão de Estoque e Preços</title>
+    <meta name="description" content="Precifica+ é a plataforma de IA que automatiza estoque, monitora validades e cria promoções inteligentes em tempo real para mercados." />
+    <meta property="og:title" content="Precifica+ — IA para Gestão de Estoque e Preços" />
+    <meta property="og:description" content="Automatize estoque, monitore validades e crie promoções inteligentes com IA." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://precificaplus.com.br" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="src/assets/favicon-logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="src/css/styles.css" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Precifica+",
+      "url": "https://precificaplus.com.br",
+      "description": "Inteligência Artificial para Gestão de Estoque e Preços",
+      "slogan": "Margens Otimizadas. Estoque Inteligente. Lucro com IA.",
+      "foundingDate": "2024",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "contato@precificaplus.com.br"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Precifica+",
+      "description": "Plataforma preditiva que automatiza estoque, monitora validades e cria promoções inteligentes em tempo real.",
+      "brand": "Precifica+",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Essencial",
+          "price": "198.00",
+          "priceCurrency": "BRL",
+          "description": "Controle essencial de estoque e acompanhamento inteligente de validades."
+        },
+        {
+          "@type": "Offer",
+          "name": "Scale IA",
+          "price": "369.00",
+          "priceCurrency": "BRL",
+          "description": "Acesso completo ao motor de IA para automação total de preços e ofertas."
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Como a IA define o valor ideal das promoções de validade?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Inteligência Artificial calcula a velocidade histórica de saída do produto, o número de itens restantes no lote e os dias que faltam para expirar. Com isso, ela gera a menor taxa de desconto necessária para garantir a venda total do estoque antes do vencimento, protegendo sua margem de lucro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O Precifica+ precisa substituir meu ERP ou frente de caixa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não, ele funciona de forma complementar. O software integra ao seu ecossistema via APIs ou cargas periódicas de arquivos, servindo como a camada de inteligência tática que falta nas plataformas legadas tradicionais."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "A IA faz alterações automáticas ou precisa de aprovação?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Você configura o nível de autonomia que desejar. No modo piloto automático, as ações vão direto para o PDV. No modo copiloto, o painel exibe sugestões e você aprova com um toque."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <canvas id="cyber-canvas"></canvas>
@@ -34,7 +113,10 @@
         <a href="#planos">Planos</a>
         <a href="#depoimentos">Casos de Sucesso</a>
       </div>
-      <a href="#cadastro" class="nav-cta">Escolha seu plano</a>
+      <div class="nav-actions">
+        <a href="#" class="nav-login-btn" onclick="showLoginModal(); return false;">Já sou cliente</a>
+        <a href="#cadastro" class="nav-cta">Escolha seu plano</a>
+      </div>
       <button class="nav-hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </nav>
 
@@ -43,6 +125,7 @@
       <a href="#como-funciona" onclick="closeMobile()">Motor de IA</a>
       <a href="#planos" onclick="closeMobile()">Planos</a>
       <a href="#depoimentos" onclick="closeMobile()">Casos de Sucesso</a>
+      <a href="#" onclick="closeMobile(); showLoginModal();">Já sou cliente</a>
       <a href="#cadastro" class="nav-cta" onclick="closeMobile()">Testar IA Agora</a>
     </div>
 
@@ -66,7 +149,7 @@
         </div>
         <div class="hero-stats">
           <div>
-            <div class="hero-stat-val">R$ 0</div>
+            <div class="hero-stat-val">Grátis</div>
             <div class="hero-stat-label">Cartão de crédito exigido</div>
           </div>
           <div>
@@ -76,6 +159,10 @@
           <div>
             <div class="hero-stat-val">10×</div>
             <div class="hero-stat-label">Retorno sobre investimento</div>
+          </div>
+          <div class="security-seal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Dados criptografados — LGPD</span>
           </div>
         </div>
       </div>
@@ -350,6 +437,15 @@
         </div>
       </div>
       <div class="pricing-note"><i data-lucide="lock" class="lucide-inline"></i> Ambiente seguro. Sem taxas ocultas de cancelamento ou configuração inicial.</div>
+      <div class="countdown-wrap reveal-fade">
+        <div class="countdown-label">🚀 Oferta especial por tempo limitado</div>
+        <div class="countdown" id="countdown">
+          <div class="countdown-unit"><span id="cd-days">14</span><small>dias</small></div>
+          <div class="countdown-unit"><span id="cd-hours">00</span><small>horas</small></div>
+          <div class="countdown-unit"><span id="cd-mins">00</span><small>min</small></div>
+          <div class="countdown-unit"><span id="cd-secs">00</span><small>seg</small></div>
+        </div>
+      </div>
     </section>
 
     <section id="cadastro" class="signup-section" data-scene="signup">
@@ -358,7 +454,7 @@
         <div class="section-title text-center">Teste 14 dias grátis</div>
         <div class="section-sub text-center" style="margin-bottom: 36px">Configuração em menos de 10 minutos. Preencha e comece agora.</div>
 
-        <div id="form-area">
+        <form id="form-area" onsubmit="submitForm(); return false;">
           <div class="form-row two">
             <div class="form-group">
               <label for="nome">Nome do Gestor</label>
@@ -368,6 +464,7 @@
             <div class="form-group">
               <label for="telefone">WhatsApp Corporativo</label>
               <input type="tel" id="telefone" placeholder="(00) 9 0000-0000" autocomplete="tel" />
+              <span class="form-error" id="err-telefone">Informe um WhatsApp válido.</span>
             </div>
           </div>
           <div class="form-row">
@@ -397,20 +494,30 @@
                 <option>300 a 1.000 produtos</option>
                 <option>Mais de 1.000 produtos</option>
               </select>
+              <span class="form-error" id="err-produtos">Selecione o tamanho do portfólio.</span>
             </div>
             <div class="form-group">
               <label for="plano">Plano de Interesse</label>
               <select id="plano">
                 <option value="" disabled selected>Selecione uma opção...</option>
-                <option>Essencial — R$ 189/mês</option>
-                <option>Scale IA — R$ 389/mês</option>
+                <option>Essencial — R$ 198/mês</option>
+                <option>Scale IA — R$ 369/mês</option>
                 <option>Enterprise — Customizado</option>
               </select>
+              <span class="form-error" id="err-plano">Selecione um plano.</span>
             </div>
           </div>
-          <button class="form-submit" id="form-submit-btn" onclick="submitForm()">Solicitar Acesso</button>
+          <div class="form-group lgpd-group">
+            <label class="lgpd-label">
+              <input type="checkbox" id="lgpd-consent" />
+              <span class="lgpd-check"></span>
+              <span>Li e aceito a <a href="#" style="color: #059669; text-decoration: underline;">Política de Privacidade</a> e autorizo o tratamento dos meus dados conforme a LGPD.</span>
+            </label>
+            <span class="form-error" id="err-lgpd">Você precisa aceitar a Política de Privacidade.</span>
+          </div>
+          <button class="form-submit" id="form-submit-btn" type="submit">Solicitar Acesso</button>
           <p class="form-privacy"><i data-lucide="lock" class="lucide-inline"></i> Proteção total dos seus dados em conformidade com a LGPD. Sem spam.</p>
-        </div>
+        </form>
 
         <div class="success-msg" id="success-msg">
           <span class="success-icon"><i data-lucide="zap"></i></span>
@@ -458,6 +565,34 @@
       </div>
     </section>
 
+    <!-- Login Modal -->
+    <div class="login-overlay" id="login-overlay" onclick="closeLoginModal(event)">
+      <div class="login-modal" onclick="event.stopPropagation()">
+        <button class="login-close" onclick="closeLoginModal()" aria-label="Fechar">&times;</button>
+        <div class="login-logo">
+          <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 120 230 L 100 230 A 30 30 0 0 1 70 200 L 70 100 A 30 30 0 0 1 100 70 L 140 70 A 55 55 0 0 1 195 125 A 55 55 0 0 1 140 180 L 100 180 A 20 20 0 0 0 80 200" stroke="#059669" stroke-width="42" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M 235 60 L 235 110 M 210 85 L 260 85" stroke="#059669" stroke-width="22" stroke-linecap="round" />
+          </svg>
+          <span>Precifica<span>+</span></span>
+        </div>
+        <h3 class="login-title">Entrar no Precifica+</h3>
+        <p class="login-sub">Acesse sua conta para gerenciar margens e estoque com IA.</p>
+        <form onsubmit="handleLogin(); return false;">
+          <div class="form-group">
+            <label for="login-email">E-mail corporativo</label>
+            <input type="email" id="login-email" placeholder="seu@mercado.com" autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="Sua senha" autocomplete="current-password" />
+          </div>
+          <button class="form-submit" type="submit">Entrar no sistema</button>
+        </form>
+        <p class="login-signup-text">Ainda não tem conta? <a href="#cadastro" onclick="closeLoginModal()">Iniciar teste grátis</a></p>
+      </div>
+    </div>
+
     <footer>
       <div class="footer-top">
         <div>
@@ -493,7 +628,7 @@
       </div>
     </footer>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.468.0"></script>
     <script defer src="src/js/main.js"></script>
   </body>
 </html>
