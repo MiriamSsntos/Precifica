@@ -1791,6 +1791,13 @@
         animation: scaleIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
         border: 1px solid var(--border-soft);
       }
+      @media (max-width: 480px) {
+        .login-modal {
+          width: calc(100% - 24px);
+          padding: 24px;
+          border-radius: 16px;
+        }
+      }
       .login-close {
         position: absolute;
         top: 16px;
