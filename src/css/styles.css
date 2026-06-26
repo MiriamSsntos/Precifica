@@ -655,7 +655,7 @@
       .hero-visual {
         flex: 1;
         min-width: 0;
-        max-width: 460px;
+        max-width: 800px;
         margin-left: auto;
         position: relative;
         z-index: 5;
@@ -1600,7 +1600,7 @@
         }
         .hero-visual {
           width: 100%;
-          max-width: 800px;
+          max-width: 500px;
           margin: 0 auto;
         }
         .features-grid {
