@@ -140,6 +140,51 @@
       .phase.f7 { background: #dcfce7; color: #166534; }
       .phase.f8 { background: #e2e8f0; color: #475569; }
       .card-text { font-size: 13px; line-height: 1.45; }
+      .sync-bar {
+        max-width: 1280px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .sync-bar input {
+        flex: 1;
+        min-width: 260px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 13px;
+        padding: 9px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--card);
+        color: var(--text);
+        outline: none;
+      }
+      .sync-bar input:focus { border-color: var(--primary); }
+      .sync-bar button {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-muted);
+        padding: 9px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .sync-bar button:hover { color: var(--primary); border-color: var(--primary); }
+      .sync-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+      .sync-status .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+      .sync-status .dot.on { background: #22c55e; }
+      .sync-status .dot.err { background: var(--red); }
       .empty {
         font-size: 12.5px;
         color: var(--text-dim);
@@ -189,6 +234,11 @@
     </header>
 
     <div class="legend" id="legend"></div>
+
+    <div class="sync-bar">
+      <button onclick="loadRepoData()">Recarregar do repositório</button>
+      <span class="sync-status"><span class="dot" id="sync-dot"></span><span id="sync-text">Carregando dados...</span></span>
+    </div>
 
     <main class="board">
       <section class="column col-todo">
@@ -259,6 +309,43 @@
       function saveBoard() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
         toast("Mudanças salvas neste navegador");
+      }
+
+      function setSyncState(mode, text) {
+        var dot = document.getElementById("sync-dot");
+        dot.className = "dot" + (mode === "on" ? " on" : mode === "err" ? " err" : "");
+        document.getElementById("sync-text").textContent = text;
+      }
+
+      function loadRepoData() {
+        setSyncState("", "Carregando dados do repositório...");
+        fetch("trello-data.json", { cache: "no-store" })
+          .then(function (r) {
+            if (!r.ok) throw new Error("sem arquivo");
+            return r.json();
+          })
+          .then(function (repo) {
+            if (!Array.isArray(repo)) throw new Error("formato inválido");
+            var before = tasks.map(function (t) { return t.id + t.col; }).join(",");
+            mergeTasks(repo);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+            render();
+            var after = tasks.map(function (t) { return t.id + t.col; }).join(",");
+            setSyncState("on", "Dados do repositório carregados");
+            toast(before === after ? "Quadro já está atualizado" : "Quadro atualizado pelo repositório");
+          })
+          .catch(function () {
+            setSyncState("err", "Offline — usando dados locais");
+          });
+      }
+
+      function mergeTasks(repo) {
+        var map = {};
+        tasks.forEach(function (t) { map[t.id] = t; });
+        repo.forEach(function (r) {
+          if (map[r.id]) map[r.id].col = r.col;
+          else tasks.push(Object.assign({}, r));
+        });
       }
 
       function resetBoard() {
@@ -387,6 +474,7 @@
       }
 
       render();
+      loadRepoData();
     </script>
   </body>
 </html>
