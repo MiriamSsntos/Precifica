@@ -1,6 +1,15 @@
 # Precifica+ — Inteligência Artificial para Gestão de Estoque e Preços ⚡
 
-O **Precifica+** é um frontend moderno de uma Landing Page focado em apresentar uma solução B2B SaaS preditiva. O objetivo da plataforma é ajudar comerciantes e gerentes de supermercados/hortifrutis a evitarem o desperdício de produtos perecíveis, utilizando Inteligência Artificial para automatizar a precificação, monitorar validades críticas e disparar alertas de estoque baixo.
+O **Precifica+** é uma plataforma B2B SaaS preditiva para gestão de estoque e precificação de produtos perecíveis. O objetivo é ajudar comerciantes e gerentes de supermercados/hortifrutis a evitarem o desperdício de produtos perecíveis, utilizando Inteligência Artificial para automatizar a precificação, monitorar validades críticas e disparar alertas de estoque baixo.
+
+**Arquitetura (monorepo):**
+
+- `landing/` — site principal de comunicação/vendas, **HTML puro** (SEO máximo) → `precifica-landing.vercel.app`
+- `painel/` — painel do cliente, **React + Vite + TypeScript** → `painel-precifica.vercel.app`
+- `api/` — backend **Python + FastAPI** (matéria de backend) com PostgreSQL + Supabase Auth
+- `trello/` — quadro Kanban do projeto
+
+> Roadmap, decisões e fases: [docs/planejamento.md](docs/planejamento.md). Contexto técnico: [AGENTS.md](AGENTS.md).
 
 ---
 
@@ -54,7 +63,11 @@ Por se tratar de uma aplicação estática puramente frontend, você não precis
     cd Precifica-
     ```
 
-3.  Abra o arquivo `index.html` diretamente no seu navegador, ou utilize uma extensão como **Live Server** no VS Code para uma experiência com hot-reload.
+3.  Inicie o servidor local (Windows PowerShell):
+    ```powershell
+    .\dev.ps1
+    ```
+    O navegador abre em `http://localhost:8000/landing/`. Alternativas: abrir `landing/index.html` direto no navegador ou usar **Live Server** do VS Code (sem hot-reload automático na landing por causa do canvas).
 
 ---
 
@@ -62,13 +75,19 @@ Por se tratar de uma aplicação estática puramente frontend, você não precis
 
 ```
 Precifica+/
-├── index.html          # Página principal da Landing Page
-├── src/
-│   ├── css/            # Estilos da aplicação
-│   ├── js/             # Scripts e lógica de animações
-│   └── assets/         # Imagens e recursos visuais
+├── landing/            # Site principal (precifica.com.br) — SEO e conversão
+│   ├── index.html      # Landing Page
+│   ├── robots.txt      # SEO
+│   ├── sitemap.xml     # SEO
+│   ├── 404.html        # Página de erro
+│   └── src/            # css/, js/, assets/
+├── painel/             # Painel do cliente (painel.precifica.com.br)
+│   ├── login.html      # Tela de login
+│   └── dashboard.html  # Dashboard (mockado — Supabase na Fase 4)
+├── docs/planejamento.md # Arquitetura e roadmap
+├── AGENTS.md           # Contexto técnico do projeto
+├── dev.ps1             # Servidor local de preview
 ├── readme.md           # Este arquivo
-└── todo.md             # Lista de tarefas do projeto
 ```
 
 ---

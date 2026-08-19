@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quadro do Projeto — Precifica+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4f8f6;
+        --card: #ffffff;
+        --border: rgba(15, 23, 20, 0.08);
+        --primary: #059669;
+        --primary-dark: #047857;
+        --text: #0f1e18;
+        --text-muted: #5b6b64;
+        --text-dim: #98a49e;
+        --amber: #d97706;
+        --cyan: #0891b2;
+        --red: #dc2626;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 28px 24px 48px;
+      }
+      header {
+        max-width: 1280px;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .logo { display: flex; align-items: center; gap: 12px; }
+      .logo svg { width: 30px; height: 30px; }
+      .logo h1 { font-family: "Outfit", sans-serif; font-size: 20px; font-weight: 800; }
+      .logo h1 em { color: var(--primary); font-style: normal; }
+      .logo p { font-size: 12px; color: var(--text-muted); }
+      .actions { display: flex; gap: 10px; }
+      .actions button {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-muted);
+        padding: 9px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .actions button:hover { color: var(--primary); border-color: var(--primary); }
+      .legend {
+        max-width: 1280px;
+        margin: 0 auto 20px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .legend .chip {
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-muted);
+      }
+      .legend .chip b { color: var(--primary); }
+      .board {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .column {
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 14px;
+        min-height: 420px;
+      }
+      .col-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 6px 14px;
+      }
+      .col-head h2 { font-family: "Outfit", sans-serif; font-size: 15px; font-weight: 700; }
+      .col-head .count {
+        font-size: 12px;
+        font-weight: 700;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        padding: 3px 10px;
+        border-radius: 999px;
+      }
+      .col-todo h2 { color: var(--amber); }
+      .col-doing h2 { color: var(--cyan); }
+      .col-done h2 { color: var(--primary); }
+      .cards { display: flex; flex-direction: column; gap: 10px; min-height: 100px; }
+      .card-item {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        cursor: grab;
+        box-shadow: 0 1px 2px rgba(15, 23, 20, 0.04);
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .card-item:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15, 23, 20, 0.08); }
+      .card-item.dragging { opacity: 0.4; }
+      .card-item.done .card-text { text-decoration: line-through; color: var(--text-dim); }
+      .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+      .phase {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 6px;
+      }
+      .phase.f0 { background: #fef3c7; color: #92400e; }
+      .phase.f1 { background: #d1fae5; color: #065f46; }
+      .phase.f2 { background: #cffafe; color: #155e75; }
+      .phase.f3 { background: #ede9fe; color: #5b21b6; }
+      .phase.f4 { background: #fce7f3; color: #9d174d; }
+      .phase.f5 { background: #dbeafe; color: #1e40af; }
+      .phase.f6 { background: #ffedd5; color: #9a3412; }
+      .phase.f7 { background: #dcfce7; color: #166534; }
+      .phase.f8 { background: #e2e8f0; color: #475569; }
+      .card-text { font-size: 13px; line-height: 1.45; }
+      .empty {
+        font-size: 12.5px;
+        color: var(--text-dim);
+        text-align: center;
+        padding: 24px 8px;
+        border: 1.5px dashed var(--border);
+        border-radius: 12px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: var(--text);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px 20px;
+        border-radius: 12px;
+        opacity: 0;
+        transition: all 0.25s ease;
+        z-index: 50;
+      }
+      .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      @media (max-width: 900px) {
+        .board { grid-template-columns: 1fr; }
+        .column { min-height: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 120 230 L 100 230 A 30 30 0 0 1 70 200 L 70 100 A 30 30 0 0 1 100 70 L 140 70 A 55 55 0 0 1 195 125 A 55 55 0 0 1 140 180 L 100 180 A 20 20 0 0 0 80 200" stroke="#059669" stroke-width="42" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M 235 60 L 235 110 M 210 85 L 260 85" stroke="#059669" stroke-width="22" stroke-linecap="round" />
+        </svg>
+        <div>
+          <h1>Quadro do Projeto — Precifica<em>+</em></h1>
+          <p>Status das fases · fonte da verdade: este arquivo (trello/index.html)</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button onclick="resetBoard()">Restaurar padrão</button>
+        <button onclick="saveBoard()">Salvar mudanças</button>
+      </div>
+    </header>
+
+    <div class="legend" id="legend"></div>
+
+    <main class="board">
+      <section class="column col-todo">
+        <div class="col-head"><h2>A Fazer</h2><span class="count" id="c-todo">0</span></div>
+        <div class="cards" data-col="todo" id="col-todo"></div>
+      </section>
+      <section class="column col-doing">
+        <div class="col-head"><h2>Em Andamento</h2><span class="count" id="c-doing">0</span></div>
+        <div class="cards" data-col="doing" id="col-doing"></div>
+      </section>
+      <section class="column col-done">
+        <div class="col-head"><h2>Concluído</h2><span class="count" id="c-done">0</span></div>
+        <div class="cards" data-col="done" id="col-done"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      var DEFAULT_TASKS = [
+        { id: "f0-1", phase: "f0", label: "Fase 0", text: "AGENTS.md e docs/planejamento.md criados", col: "done" },
+        { id: "f0-2", phase: "f0", label: "Fase 0", text: "Quadro Kanban (trello/index.html) criado", col: "done" },
+        { id: "f0-3", phase: "f0", label: "Fase 0", text: "docs/git-workflow.md — passo a passo de branches/PR para a equipe", col: "done" },
+        { id: "f1-1", phase: "f1", label: "Fase 1", text: "Monorepo separado (landing/ + painel/) com links corrigidos", col: "done" },
+        { id: "f1-2", phase: "f1", label: "Fase 1", text: "robots.txt, sitemap.xml e 404.html criados", col: "done" },
+        { id: "f1-3", phase: "f1", label: "Fase 1", text: "dev.ps1 criado e validado (páginas respondem 200)", col: "done" },
+        { id: "f2-1", phase: "f2", label: "Fase 2", text: "og:url + canonical apontando para precifica-landing.vercel.app", col: "todo" },
+        { id: "f2-2", phase: "f2", label: "Fase 2", text: "og:image 1200x630 (PNG com branding)", col: "todo" },
+        { id: "f2-3", phase: "f2", label: "Fase 2", text: "theme-color + revisão do JSON-LD", col: "todo" },
+        { id: "f2-4", phase: "f2", label: "Fase 2", text: "Validar no Google Rich Results / Lighthouse", col: "todo" },
+        { id: "f3-1", phase: "f3", label: "Fase 3", text: "Criar projeto Supabase (plano grátis) — usuário", col: "todo" },
+        { id: "f3-2", phase: "f3", label: "Fase 3", text: "Schema SQL + RLS + seed protótipo", col: "todo" },
+        { id: "f3-3", phase: "f3", label: "Fase 3", text: "Conta demo no Supabase Auth", col: "todo" },
+        { id: "f3-4", phase: "f3", label: "Fase 3", text: "Credenciais em .env gitignored (+ .env.example)", col: "todo" },
+        { id: "f4-1", phase: "f4", label: "Fase 4", text: "Scaffold FastAPI (venv + requirements + app/)", col: "todo" },
+        { id: "f4-2", phase: "f4", label: "Fase 4", text: "Middleware de auth JWT (Supabase)", col: "todo" },
+        { id: "f4-3", phase: "f4", label: "Fase 4", text: "CRUD produtos/categorias + stats + alertas", col: "todo" },
+        { id: "f4-4", phase: "f4", label: "Fase 4", text: "Engine v1 — lógica de estoque (margem, validade, giro)", col: "todo" },
+        { id: "f4-5", phase: "f4", label: "Fase 4", text: "Testes pytest", col: "todo" },
+        { id: "f4-6", phase: "f4", label: "Fase 4", text: "Validar Swagger /docs no navegador", col: "todo" },
+        { id: "f5-1", phase: "f5", label: "Fase 5", text: "Scaffold Vite + TypeScript", col: "todo" },
+        { id: "f5-2", phase: "f5", label: "Fase 5", text: "Login com supabase-js (design do mockup)", col: "todo" },
+        { id: "f5-3", phase: "f5", label: "Fase 5", text: "Session guard + logout", col: "todo" },
+        { id: "f5-4", phase: "f5", label: "Fase 5", text: "Dashboard consumindo a API Python (JWT)", col: "todo" },
+        { id: "f5-5", phase: "f5", label: "Fase 5", text: "npm run build sem erros", col: "todo" },
+        { id: "f6-1", phase: "f6", label: "Fase 6", text: "Vercel: landing publicada", col: "todo" },
+        { id: "f6-2", phase: "f6", label: "Fase 6", text: "Vercel: painel publicado + noindex", col: "todo" },
+        { id: "f6-3", phase: "f6", label: "Fase 6", text: "Render: API Python com auto-deploy", col: "todo" },
+        { id: "f6-4", phase: "f6", label: "Fase 6", text: "Fluxo completo em produção (landing → login → dashboard)", col: "todo" },
+        { id: "f7-1", phase: "f7", label: "Fase 7", text: "README acadêmico (arquitetura, schema, auth)", col: "todo" },
+        { id: "f7-2", phase: "f7", label: "Fase 7", text: "Justificativa: auth externo é prática de mercado; backend real = API", col: "todo" },
+        { id: "f7-3", phase: "f7", label: "Fase 7", text: "Print do Swagger /docs para a apresentação", col: "todo" },
+        { id: "f8-1", phase: "f8", label: "Fase 8", text: "Opcional: IA na engine (promoções automáticas)", col: "todo" },
+        { id: "f8-2", phase: "f8", label: "Fase 8", text: "Opcional: cadastro público de usuário", col: "todo" }
+      ];
+
+      var STORAGE_KEY = "precifica-kanban-v1";
+      var tasks = load();
+
+      function load() {
+        try {
+          var saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) return JSON.parse(saved);
+        } catch (e) {}
+        return DEFAULT_TASKS.map(function (t) { return Object.assign({}, t); });
+      }
+
+      function saveBoard() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        toast("Mudanças salvas neste navegador");
+      }
+
+      function resetBoard() {
+        tasks = DEFAULT_TASKS.map(function (t) { return Object.assign({}, t); });
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+        toast("Quadro restaurado ao padrão do repositório");
+      }
+
+      function toast(msg) {
+        var el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        clearTimeout(el._t);
+        el._t = setTimeout(function () { el.classList.remove("show"); }, 2200);
+      }
+
+      function renderLegend() {
+        var phases = {};
+        tasks.forEach(function (t) { phases[t.phase] = true; });
+        var labels = {
+          f0: "F0 docs", f1: "F1 monorepo", f2: "F2 SEO", f3: "F3 supabase",
+          f4: "F4 API", f5: "F5 painel", f6: "F6 deploy", f7: "F7 docs", f8: "F8 opcional"
+        };
+        var el = document.getElementById("legend");
+        el.innerHTML = "";
+        Object.keys(phases).sort().forEach(function (p) {
+          var done = tasks.filter(function (t) { return t.phase === p && t.col === "done"; }).length;
+          var total = tasks.filter(function (t) { return t.phase === p; }).length;
+          var chip = document.createElement("span");
+          chip.className = "chip phase " + p;
+          chip.textContent = labels[p] + " — ";
+          var b = document.createElement("b");
+          b.textContent = done + "/" + total;
+          chip.appendChild(b);
+          el.appendChild(chip);
+        });
+      }
+
+      function render() {
+        ["todo", "doing", "done"].forEach(function (col) {
+          var wrap = document.getElementById("col-" + col);
+          wrap.innerHTML = "";
+          var list = tasks.filter(function (t) { return t.col === col; });
+          document.getElementById("c-" + col).textContent = list.length;
+          if (!list.length) {
+            var empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent = col === "done" ? "Nada concluído ainda" : "Nenhuma tarefa";
+            wrap.appendChild(empty);
+            return;
+          }
+          list.forEach(function (t) { wrap.appendChild(createCard(t)); });
+        });
+        renderLegend();
+      }
+
+      function createCard(t) {
+        var el = document.createElement("div");
+        el.className = "card-item" + (t.col === "done" ? " done" : "");
+        el.draggable = true;
+        el.dataset.id = t.id;
+        var top = document.createElement("div");
+        top.className = "card-top";
+        var phase = document.createElement("span");
+        phase.className = "phase " + t.phase;
+        phase.textContent = t.label;
+        top.appendChild(phase);
+        el.appendChild(top);
+        var text = document.createElement("div");
+        text.className = "card-text";
+        text.textContent = t.text;
+        el.appendChild(text);
+        return el;
+      }
+
+      var dragId = null;
+
+      document.addEventListener("dragstart", function (e) {
+        var card = e.target.closest(".card-item");
+        if (!card) return;
+        dragId = card.dataset.id;
+        card.classList.add("dragging");
+      });
+
+      document.addEventListener("dragend", function (e) {
+        var card = e.target.closest(".card-item");
+        if (card) card.classList.remove("dragging");
+        dragId = null;
+      });
+
+      document.addEventListener("dragover", function (e) {
+        var col = e.target.closest(".cards");
+        if (col) {
+          e.preventDefault();
+          var after = getDragAfterElement(col, e.clientY);
+          var dragging = document.querySelector(".card-item.dragging");
+          if (dragging && after) col.insertBefore(dragging, after);
+          else if (dragging) col.appendChild(dragging);
+        }
+      });
+
+      document.addEventListener("drop", function (e) {
+        e.preventDefault();
+        var col = e.target.closest(".cards");
+        if (!col || !dragId) return;
+        tasks.forEach(function (t) {
+          if (t.id === dragId) {
+            t.col = col.dataset.col;
+            t.done = t.col === "done";
+          }
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        render();
+        toast("Card movido — lembre-se de atualizar o repositório");
+      });
+
+      function getDragAfterElement(container, y) {
+        var els = Array.prototype.slice.call(container.querySelectorAll(".card-item:not(.dragging)"));
+        return els.reduce(function (closest, child) {
+          var box = child.getBoundingClientRect();
+          var offset = y - box.top - box.height / 2;
+          if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+          return closest;
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+      }
+
+      render();
+    </script>
+  </body>
+</html>
