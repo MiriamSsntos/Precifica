@@ -224,7 +224,7 @@
         </svg>
         <div>
           <h1>Quadro do Projeto — Precifica<em>+</em></h1>
-          <p>Status das fases · fonte da verdade: este arquivo (trello/index.html)</p>
+          <p>Status das fases · fonte: trello-data.json (repositório) · auto-atualiza a cada 60s</p>
         </div>
       </div>
       <div class="actions">
@@ -237,7 +237,7 @@
 
     <div class="sync-bar">
       <button onclick="loadRepoData()">Recarregar do repositório</button>
-      <span class="sync-status"><span class="dot" id="sync-dot"></span><span id="sync-text">Carregando dados...</span></span>
+      <span class="sync-status" title="O quadro busca trello-data.json do repositório a cada 60s e quando a aba fica visível"><span class="dot" id="sync-dot"></span><span id="sync-text">Carregando dados...</span></span>
     </div>
 
     <main class="board">
@@ -317,8 +317,8 @@
         document.getElementById("sync-text").textContent = text;
       }
 
-      function loadRepoData() {
-        setSyncState("", "Carregando dados do repositório...");
+      function loadRepoData(silent) {
+        if (!silent) setSyncState("", "Carregando dados do repositório...");
         fetch("trello-data.json", { cache: "no-store" })
           .then(function (r) {
             if (!r.ok) throw new Error("sem arquivo");
@@ -331,11 +331,18 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
             render();
             var after = tasks.map(function (t) { return t.id + t.col; }).join(",");
-            setSyncState("on", "Dados do repositório carregados");
-            toast(before === after ? "Quadro já está atualizado" : "Quadro atualizado pelo repositório");
+            if (before === after) {
+              if (!silent) {
+                setSyncState("on", "Dados do repositório carregados");
+                toast("Quadro já está atualizado");
+              }
+            } else {
+              setSyncState("on", "Atualizado pelo repositório");
+              toast("Quadro atualizado automaticamente");
+            }
           })
           .catch(function () {
-            setSyncState("err", "Offline — usando dados locais");
+            if (!silent) setSyncState("err", "Offline — usando dados locais");
           });
       }
 
@@ -475,6 +482,10 @@
 
       render();
       loadRepoData();
+      setInterval(function () { loadRepoData(true); }, 60000);
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) loadRepoData(true);
+      });
     </script>
   </body>
 </html>
