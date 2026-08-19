@@ -1,36 +1,241 @@
 [
-  { "id": "f0-1", "phase": "f0", "label": "Fase 0", "text": "AGENTS.md e docs/planejamento.md criados", "col": "done" },
-  { "id": "f0-2", "phase": "f0", "label": "Fase 0", "text": "Quadro Kanban (trello/index.html) criado", "col": "done" },
-  { "id": "f0-3", "phase": "f0", "label": "Fase 0", "text": "docs/git-workflow.md — passo a passo de branches/PR para a equipe", "col": "done" },
-  { "id": "f1-1", "phase": "f1", "label": "Fase 1", "text": "Monorepo separado (landing/ + painel/) com links corrigidos", "col": "done" },
-  { "id": "f1-2", "phase": "f1", "label": "Fase 1", "text": "robots.txt, sitemap.xml e 404.html criados", "col": "done" },
-  { "id": "f1-3", "phase": "f1", "label": "Fase 1", "text": "dev.ps1 criado e validado (páginas respondem 200)", "col": "done" },
-  { "id": "f2-1", "phase": "f2", "label": "Fase 2", "text": "og:url + canonical apontando para precifica-landing.vercel.app", "col": "todo" },
-  { "id": "f2-2", "phase": "f2", "label": "Fase 2", "text": "og:image 1200x630 (PNG com branding)", "col": "todo" },
-  { "id": "f2-3", "phase": "f2", "label": "Fase 2", "text": "theme-color + revisão do JSON-LD", "col": "todo" },
-  { "id": "f2-4", "phase": "f2", "label": "Fase 2", "text": "Validar no Google Rich Results / Lighthouse", "col": "todo" },
-  { "id": "f3-1", "phase": "f3", "label": "Fase 3", "text": "Criar projeto Supabase (plano grátis) — usuário", "col": "todo" },
-  { "id": "f3-2", "phase": "f3", "label": "Fase 3", "text": "Schema SQL + RLS + seed protótipo", "col": "todo" },
-  { "id": "f3-3", "phase": "f3", "label": "Fase 3", "text": "Conta demo no Supabase Auth", "col": "todo" },
-  { "id": "f3-4", "phase": "f3", "label": "Fase 3", "text": "Credenciais em .env gitignored (+ .env.example)", "col": "todo" },
-  { "id": "f4-1", "phase": "f4", "label": "Fase 4", "text": "Scaffold FastAPI (venv + requirements + app/)", "col": "todo" },
-  { "id": "f4-2", "phase": "f4", "label": "Fase 4", "text": "Middleware de auth JWT (Supabase)", "col": "todo" },
-  { "id": "f4-3", "phase": "f4", "label": "Fase 4", "text": "CRUD produtos/categorias + stats + alertas", "col": "todo" },
-  { "id": "f4-4", "phase": "f4", "label": "Fase 4", "text": "Engine v1 — lógica de estoque (margem, validade, giro)", "col": "todo" },
-  { "id": "f4-5", "phase": "f4", "label": "Fase 4", "text": "Testes pytest", "col": "todo" },
-  { "id": "f4-6", "phase": "f4", "label": "Fase 4", "text": "Validar Swagger /docs no navegador", "col": "todo" },
-  { "id": "f5-1", "phase": "f5", "label": "Fase 5", "text": "Scaffold Vite + TypeScript", "col": "todo" },
-  { "id": "f5-2", "phase": "f5", "label": "Fase 5", "text": "Login com supabase-js (design do mockup)", "col": "todo" },
-  { "id": "f5-3", "phase": "f5", "label": "Fase 5", "text": "Session guard + logout", "col": "todo" },
-  { "id": "f5-4", "phase": "f5", "label": "Fase 5", "text": "Dashboard consumindo a API Python (JWT)", "col": "todo" },
-  { "id": "f5-5", "phase": "f5", "label": "Fase 5", "text": "npm run build sem erros", "col": "todo" },
-  { "id": "f6-1", "phase": "f6", "label": "Fase 6", "text": "Vercel: landing publicada", "col": "todo" },
-  { "id": "f6-2", "phase": "f6", "label": "Fase 6", "text": "Vercel: painel publicado + noindex", "col": "todo" },
-  { "id": "f6-3", "phase": "f6", "label": "Fase 6", "text": "Render: API Python com auto-deploy", "col": "todo" },
-  { "id": "f6-4", "phase": "f6", "label": "Fase 6", "text": "Fluxo completo em produção (landing → login → dashboard)", "col": "todo" },
-  { "id": "f7-1", "phase": "f7", "label": "Fase 7", "text": "README acadêmico (arquitetura, schema, auth)", "col": "todo" },
-  { "id": "f7-2", "phase": "f7", "label": "Fase 7", "text": "Justificativa: auth externo é prática de mercado; backend real = API", "col": "todo" },
-  { "id": "f7-3", "phase": "f7", "label": "Fase 7", "text": "Print do Swagger /docs para a apresentação", "col": "todo" },
-  { "id": "f8-1", "phase": "f8", "label": "Fase 8", "text": "Opcional: IA na engine (promoções automáticas)", "col": "todo" },
-  { "id": "f8-2", "phase": "f8", "label": "Fase 8", "text": "Opcional: cadastro público de usuário", "col": "todo" }
+  {
+    "id": "f0-1",
+    "phase": "f0",
+    "label": "Fase 0",
+    "text": "AGENTS.md e docs/planejamento.md criados",
+    "col": "done"
+  },
+  {
+    "id": "f0-2",
+    "phase": "f0",
+    "label": "Fase 0",
+    "text": "Quadro Kanban (trello/index.html) criado",
+    "col": "done"
+  },
+  {
+    "id": "f0-3",
+    "phase": "f0",
+    "label": "Fase 0",
+    "text": "docs/git-workflow.md — passo a passo de branches/PR para a equipe",
+    "col": "done"
+  },
+  {
+    "id": "f1-1",
+    "phase": "f1",
+    "label": "Fase 1",
+    "text": "Monorepo separado (landing/ + painel/) com links corrigidos",
+    "col": "done"
+  },
+  {
+    "id": "f1-2",
+    "phase": "f1",
+    "label": "Fase 1",
+    "text": "robots.txt, sitemap.xml e 404.html criados",
+    "col": "done"
+  },
+  {
+    "id": "f1-3",
+    "phase": "f1",
+    "label": "Fase 1",
+    "text": "dev.ps1 criado e validado (páginas respondem 200)",
+    "col": "done"
+  },
+  {
+    "id": "f2-1",
+    "phase": "f2",
+    "label": "Fase 2",
+    "text": "og:url + canonical apontando para precifica-landing.vercel.app",
+    "col": "doing",
+    "done": false
+  },
+  {
+    "id": "f2-2",
+    "phase": "f2",
+    "label": "Fase 2",
+    "text": "og:image 1200x630 (PNG com branding)",
+    "col": "todo"
+  },
+  {
+    "id": "f2-3",
+    "phase": "f2",
+    "label": "Fase 2",
+    "text": "theme-color + revisão do JSON-LD",
+    "col": "todo"
+  },
+  {
+    "id": "f2-4",
+    "phase": "f2",
+    "label": "Fase 2",
+    "text": "Validar no Google Rich Results / Lighthouse",
+    "col": "todo"
+  },
+  {
+    "id": "f3-1",
+    "phase": "f3",
+    "label": "Fase 3",
+    "text": "Criar projeto Supabase (plano grátis) — usuário",
+    "col": "todo"
+  },
+  {
+    "id": "f3-2",
+    "phase": "f3",
+    "label": "Fase 3",
+    "text": "Schema SQL + RLS + seed protótipo",
+    "col": "todo"
+  },
+  {
+    "id": "f3-3",
+    "phase": "f3",
+    "label": "Fase 3",
+    "text": "Conta demo no Supabase Auth",
+    "col": "todo"
+  },
+  {
+    "id": "f3-4",
+    "phase": "f3",
+    "label": "Fase 3",
+    "text": "Credenciais em .env gitignored (+ .env.example)",
+    "col": "todo"
+  },
+  {
+    "id": "f4-1",
+    "phase": "f4",
+    "label": "Fase 4",
+    "text": "Scaffold FastAPI (venv + requirements + app/)",
+    "col": "todo"
+  },
+  {
+    "id": "f4-2",
+    "phase": "f4",
+    "label": "Fase 4",
+    "text": "Middleware de auth JWT (Supabase)",
+    "col": "todo"
+  },
+  {
+    "id": "f4-3",
+    "phase": "f4",
+    "label": "Fase 4",
+    "text": "CRUD produtos/categorias + stats + alertas",
+    "col": "todo"
+  },
+  {
+    "id": "f4-4",
+    "phase": "f4",
+    "label": "Fase 4",
+    "text": "Engine v1 — lógica de estoque (margem, validade, giro)",
+    "col": "todo"
+  },
+  {
+    "id": "f4-5",
+    "phase": "f4",
+    "label": "Fase 4",
+    "text": "Testes pytest",
+    "col": "todo"
+  },
+  {
+    "id": "f4-6",
+    "phase": "f4",
+    "label": "Fase 4",
+    "text": "Validar Swagger /docs no navegador",
+    "col": "todo"
+  },
+  {
+    "id": "f5-1",
+    "phase": "f5",
+    "label": "Fase 5",
+    "text": "Scaffold Vite + TypeScript",
+    "col": "todo"
+  },
+  {
+    "id": "f5-2",
+    "phase": "f5",
+    "label": "Fase 5",
+    "text": "Login com supabase-js (design do mockup)",
+    "col": "todo"
+  },
+  {
+    "id": "f5-3",
+    "phase": "f5",
+    "label": "Fase 5",
+    "text": "Session guard + logout",
+    "col": "todo"
+  },
+  {
+    "id": "f5-4",
+    "phase": "f5",
+    "label": "Fase 5",
+    "text": "Dashboard consumindo a API Python (JWT)",
+    "col": "todo"
+  },
+  {
+    "id": "f5-5",
+    "phase": "f5",
+    "label": "Fase 5",
+    "text": "npm run build sem erros",
+    "col": "todo"
+  },
+  {
+    "id": "f6-1",
+    "phase": "f6",
+    "label": "Fase 6",
+    "text": "Vercel: landing publicada",
+    "col": "todo"
+  },
+  {
+    "id": "f6-2",
+    "phase": "f6",
+    "label": "Fase 6",
+    "text": "Vercel: painel publicado + noindex",
+    "col": "todo"
+  },
+  {
+    "id": "f6-3",
+    "phase": "f6",
+    "label": "Fase 6",
+    "text": "Render: API Python com auto-deploy",
+    "col": "todo"
+  },
+  {
+    "id": "f6-4",
+    "phase": "f6",
+    "label": "Fase 6",
+    "text": "Fluxo completo em produção (landing → login → dashboard)",
+    "col": "todo"
+  },
+  {
+    "id": "f7-1",
+    "phase": "f7",
+    "label": "Fase 7",
+    "text": "README acadêmico (arquitetura, schema, auth)",
+    "col": "todo"
+  },
+  {
+    "id": "f7-2",
+    "phase": "f7",
+    "label": "Fase 7",
+    "text": "Justificativa: auth externo é prática de mercado; backend real = API",
+    "col": "todo"
+  },
+  {
+    "id": "f7-3",
+    "phase": "f7",
+    "label": "Fase 7",
+    "text": "Print do Swagger /docs para a apresentação",
+    "col": "todo"
+  },
+  {
+    "id": "f8-1",
+    "phase": "f8",
+    "label": "Fase 8",
+    "text": "Opcional: IA na engine (promoções automáticas)",
+    "col": "todo"
+  },
+  {
+    "id": "f8-2",
+    "phase": "f8",
+    "label": "Fase 8",
+    "text": "Opcional: cadastro público de usuário",
+    "col": "todo"
+  }
 ]
