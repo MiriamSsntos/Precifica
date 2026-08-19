@@ -32,8 +32,10 @@ Decisões tomadas (não reverter sem perguntar):
 - `painel/` — só mockups estáticos (login.html/dashboard.html); serão substituídos pelo React (Fase 5), servindo de referência de design.
 - `api/` — ainda não existe (Fase 4).
 - `docs/planejamento.md` — arquitetura, schema e fases (LER antes de executar qualquer fase).
-- `trello/index.html` — quadro Kanban; atualizá-lo sempre que uma tarefa mudar de status (campo `col` no array `DEFAULT_TASKS`).
+- `trello/index.html` — quadro Kanban (GitHub Pages). Os dados ficam em `trello/trello-data.json`. **Atualizar SEMPRE os dois** (array `DEFAULT_TASKS` no HTML + JSON) quando um status mudar.
 - `dev.ps1` — preview local: `.\dev.ps1` (python http.server, porta 8000).
+- GitHub Pages ativo: `https://miriamssntos.github.io/Precifica/` → quadro em `/trello/` (branch `main`; publicar via PR).
+- gh CLI instalado e autenticado (`gh` disponível para PRs/Pages).
 - Repo local está atrás do `origin/main` (fazer `git pull` antes de criar branch).
 
 ## Convenções

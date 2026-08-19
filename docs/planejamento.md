@@ -83,7 +83,8 @@ Precifica+/
 │   ├── planejamento.md     # Este documento
 │   └── git-workflow.md     # Fluxo de branches/PR da equipe
 ├── trello/
-│   └── index.html          # Quadro Kanban do projeto (fonte de status)
+│   ├── index.html          # Quadro Kanban do projeto (fonte de status)
+│   └── trello-data.json    # Dados do quadro (sincronizar com o HTML sempre)
 ├── landing/                # → precifica-landing.vercel.app (HTML puro)
 │   ├── index.html
 │   ├── robots.txt / sitemap.xml / 404.html
@@ -97,6 +98,8 @@ Precifica+/
     ├── seed.sql
     └── requirements.txt
 ```
+
+> **Quadro da equipe**: GitHub Pages publica `trello/` a partir da branch `main` → `https://miriamssntos.github.io/Precifica/trello/`. O quadro carrega `trello-data.json` do repositório; o array `DEFAULT_TASKS` no HTML é fallback offline — **manter os dois sincronizados** ao mudar status.
 
 > `painel/login.html` e `painel/dashboard.html` (mockups atuais) servirão de **referência de design** para o React — o visual será reaproveitado via design tokens.
 
