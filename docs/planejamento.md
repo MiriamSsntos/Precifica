@@ -99,7 +99,7 @@ Precifica+/
     └── requirements.txt
 ```
 
-> **Quadro da equipe**: GitHub Pages publica `trello/` a partir da branch `main` → `https://miriamssntos.github.io/Precifica/trello/`. O quadro carrega `trello-data.json` do repositório; o array `DEFAULT_TASKS` no HTML é fallback offline — **manter os dois sincronizados** ao mudar status.
+> **Quadro da equipe**: GitHub Pages publica `trello/` a partir da branch `main` → `https://miriamssntos.github.io/Precifica/trello/`. Fonte única de dados: `trello-data.json` (o HTML não embute dados). A equipe pode commitar direto na `main` pelo próprio quadro (token GitHub fine-grained, escopo `contents:write` — exceção documentada da regra de PR, pois é ferramenta interna). Auto-refresh de 60s + foco da aba.
 
 > `painel/login.html` e `painel/dashboard.html` (mockups atuais) servirão de **referência de design** para o React — o visual será reaproveitado via design tokens.
 
@@ -262,7 +262,7 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 
 ## 10. Ideias futuras (fora do escopo atual)
 
-- **Quadro da equipe**: conectar ao Supabase Realtime na Fase 3 (drag & drop sincronizado na hora, sem push no git) — decisão tomada; enquanto isso, `trello-data.json` + auto-refresh de 60s é suficiente.
+- **Quadro da equipe**: funciona com commit automático via GitHub API (drag & drop → `chore:` na main) — Supabase Realtime segue como opção futura se precisar de concorrência melhor.
 
 - Engine de IA (promoções automáticas com machine learning)
 - Cadastro público na landing (CTA → criar conta → painel)
