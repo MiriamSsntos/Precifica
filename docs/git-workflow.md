@@ -90,6 +90,21 @@ Regras:
 5. PR só é mergeado após revisão do diff.
 6. Nenhum arquivo de segredo entra no repo (`.env` é gitignored).
 
+> **Exceção única**: `trello/trello-data.json` pode ser commitado direto na `main` pela UI do quadro (arrastar card + token GitHub) — é ferramenta interna da equipe, não código do produto.
+
+## 7. Atualizar o quadro pelo navegador (sem git)
+
+Qualquer pessoa da equipe pode mover cards no quadro sem conhecer git:
+
+1. Abrir `https://miriamssntos.github.io/Precifica/trello/`.
+2. Criar um token de acesso (uma vez): GitHub → Settings → Developer settings → **Fine-grained tokens** → Generate new token:
+   - Repository access: **Only select repositories** → `Precifica`
+   - Permissions → Repository permissions → **Contents: Read and write**
+   - Generate; copiar o token.
+3. Colar o token no campo do quadro → **Conectar GitHub**.
+4. Pronto: arrastar um card = commit automático (`chore: atualiza quadro kanban`) na `main` — todos veem em ~1 min.
+5. O token fica salvo só no seu navegador. Se vazar, revogue em Settings → Developer settings.
+
 ## 7. Comandos úteis
 
 ```powershell

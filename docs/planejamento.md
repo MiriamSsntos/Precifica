@@ -83,7 +83,8 @@ Precifica+/
 │   ├── planejamento.md     # Este documento
 │   └── git-workflow.md     # Fluxo de branches/PR da equipe
 ├── trello/
-│   └── index.html          # Quadro Kanban do projeto (fonte de status)
+│   ├── index.html          # Quadro Kanban do projeto (fonte de status)
+│   └── trello-data.json    # Dados do quadro (sincronizar com o HTML sempre)
 ├── landing/                # → precifica-landing.vercel.app (HTML puro)
 │   ├── index.html
 │   ├── robots.txt / sitemap.xml / 404.html
@@ -97,6 +98,8 @@ Precifica+/
     ├── seed.sql
     └── requirements.txt
 ```
+
+> **Quadro da equipe**: GitHub Pages publica `trello/` a partir da branch `main` → `https://miriamssntos.github.io/Precifica/trello/`. Fonte única de dados: `trello-data.json` (o HTML não embute dados). A equipe pode commitar direto na `main` pelo próprio quadro (token GitHub fine-grained, escopo `contents:write` — exceção documentada da regra de PR, pois é ferramenta interna). Auto-refresh de 60s + foco da aba.
 
 > `painel/login.html` e `painel/dashboard.html` (mockups atuais) servirão de **referência de design** para o React — o visual será reaproveitado via design tokens.
 
@@ -258,6 +261,8 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 ---
 
 ## 10. Ideias futuras (fora do escopo atual)
+
+- **Quadro da equipe**: funciona com commit automático via GitHub API (drag & drop → `chore:` na main) — Supabase Realtime segue como opção futura se precisar de concorrência melhor.
 
 - Engine de IA (promoções automáticas com machine learning)
 - Cadastro público na landing (CTA → criar conta → painel)

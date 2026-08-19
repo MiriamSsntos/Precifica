@@ -23,7 +23,7 @@ Decisões tomadas (não reverter sem perguntar):
 - **Banco**: PostgreSQL do Supabase, conexão direta via pooler (porta 6543). RLS ativo + filtro por `user_id` na API (dupla proteção).
 - **Engine v1**: SÓ lógica de estoque (margem, validade, giro, alertas) em `api/app/engine/`. IA é fase futura — não implementar sem pedir.
 - **Deploy**: Vercel (landing + painel) + Render (API). Sem domínio próprio por enquanto — URLs `.vercel.app`/`.onrender.com` (cold start ~50s aceito).
-- **Git**: branches `feat/<fase>` + PR + Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`). NUNCA commitar direto na `main`.
+- **Git**: branches `feat/<fase>` + PR + Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`). NUNCA commitar direto na `main` — **exceção única**: `trello/trello-data.json` atualizado pela UI do quadro (ferramenta interna da equipe, commit `chore:` automático).
 - **Idioma**: pt-BR em produto e documentação. **Custo total: R$ 0.**
 
 ## Estado atual
@@ -32,8 +32,10 @@ Decisões tomadas (não reverter sem perguntar):
 - `painel/` — só mockups estáticos (login.html/dashboard.html); serão substituídos pelo React (Fase 5), servindo de referência de design.
 - `api/` — ainda não existe (Fase 4).
 - `docs/planejamento.md` — arquitetura, schema e fases (LER antes de executar qualquer fase).
-- `trello/index.html` — quadro Kanban; atualizá-lo sempre que uma tarefa mudar de status (campo `col` no array `DEFAULT_TASKS`).
+- `trello/index.html` — quadro Kanban (GitHub Pages). Fonte única de dados: `trello/trello-data.json` (o HTML não tem dados embutidos). O quadro pode **commitar direto na `main`** via token GitHub (exceção documentada: ferramenta interna, não código). **Quando um status mudar (eu ou a equipe via UI), o arquivo `trello-data.json` deve refletir isso.**
 - `dev.ps1` — preview local: `.\dev.ps1` (python http.server, porta 8000).
+- GitHub Pages ativo: `https://miriamssntos.github.io/Precifica/` → quadro em `/trello/` (branch `main`; publicar via PR).
+- gh CLI instalado e autenticado (`gh` disponível para PRs/Pages).
 - Repo local está atrás do `origin/main` (fazer `git pull` antes de criar branch).
 
 ## Convenções
