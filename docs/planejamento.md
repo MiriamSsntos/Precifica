@@ -262,6 +262,8 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 
 ## 10. Ideias futuras (fora do escopo atual)
 
+- **Quadro da equipe**: conectar ao Supabase Realtime na Fase 3 (drag & drop sincronizado na hora, sem push no git) — decisão tomada; enquanto isso, `trello-data.json` + auto-refresh de 60s é suficiente.
+
 - Engine de IA (promoções automáticas com machine learning)
 - Cadastro público na landing (CTA → criar conta → painel)
 - Integração do formulário de lead com a API (substituir Web3Forms)
