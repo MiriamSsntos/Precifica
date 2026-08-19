@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://precifica.com.br/sitemap.xml

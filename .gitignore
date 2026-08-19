@@ -1,2 +1,33 @@
+# Skills externas (não versionar)
 .agents
+
+# Ambiente / secrets (nunca commitar; versionar apenas .env.example)
+.env
+.env.*
+!.env.example
+
+# Python (api/)
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node (painel/)
+node_modules/
+dist/
+.vite/
+
+# Deploy
+.vercel/
+
+# IDE / SO
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
 /ATV1
