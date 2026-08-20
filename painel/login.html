@@ -252,6 +252,58 @@
       .form-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
       .form-footer a:hover { text-decoration: underline; }
 
+      .auth-alert {
+        display: none;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 16px;
+        animation: fadeIn 0.2s ease;
+      }
+      .auth-alert.error {
+        display: block;
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+      }
+      .auth-alert.success {
+        display: block;
+        background: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+      }
+
+      .btn-continue:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      .btn-continue .spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+      .btn-continue.loading .spinner {
+        display: inline-block;
+      }
+      .btn-continue.loading .btn-text,
+      .btn-continue.loading svg:not(.spinner) {
+        display: none;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
       @media (max-width: 860px) {
         .auth-shell { grid-template-columns: 1fr; }
         .auth-brand { display: none; }
@@ -301,46 +353,282 @@
         </div>
       </div>
 
-      <div class="auth-form-panel">
-        <div class="form-heading">
-          <h2>Entrar</h2>
-          <p>Acesse sua conta para gerenciar margens e estoque com IA.</p>
+        <div class="auth-form-panel">
+          <div class="form-heading">
+            <h2 id="formTitle">Entrar</h2>
+            <p id="formSubtitle">Acesse sua conta para gerenciar margens e estoque com IA.</p>
+          </div>
+
+          <div class="auth-alert" id="authAlert"></div>
+
+          <form id="loginForm" onsubmit="handleAuthSubmit(event);">
+            <div class="field" id="nameField" style="display: none;">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" />
+            </div>
+            <div class="field" id="companyField" style="display: none;">
+              <label for="empresa">Nome do Mercado / Empresa</label>
+              <input type="text" id="empresa" placeholder="Ex: Mercado Central" autocomplete="organization" />
+            </div>
+            <div class="field">
+              <label for="email">E-mail corporativo</label>
+              <input type="email" id="email" placeholder="seu@mercado.com" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="senha">Senha</label>
+              <input type="password" id="senha" placeholder="Sua senha (mínimo 6 caracteres)" autocomplete="current-password" required minlength="6" />
+            </div>
+            <div class="form-row-between" id="rememberRow">
+              <label><input type="checkbox" id="rememberMe" checked /> Manter conectado</label>
+              <a href="#" onclick="handleForgotPassword(event);">Esqueci minha senha</a>
+            </div>
+            <button class="btn-continue" id="btnLogin" type="submit">
+              <span class="btn-text" id="btnSubmitText">Continuar</span>
+              <div class="spinner"></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" /></svg>
+            </button>
+          </form>
+
+          <div class="divider">ou conecte-se com</div>
+
+          <div class="sso">
+            <button class="sso-btn" type="button" onclick="handleOAuth('google');">
+              <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.2s2.7-6.2 6-6.2c1.9 0 3.2.8 3.9 1.5l2.6-2.6C16.9 3.1 14.7 2.2 12 2.2 6.9 2.2 2.7 6.4 2.7 12s4.2 9.8 9.3 9.8c5.4 0 9-3.8 9-9.1 0-.6-.1-1.1-.1-1.5H12Z"/></svg>
+              Entrar com Google
+            </button>
+            <button class="sso-btn" type="button" onclick="handleOAuth('azure');">
+              <svg viewBox="0 0 23 23"><path fill="#F35325" d="M1 1h10v10H1z"/><path fill="#81BC06" d="M12 1h10v10H12z"/><path fill="#05A6F0" d="M1 12h10v10H1z"/><path fill="#FFBA08" d="M12 12h10v10H12z"/></svg>
+              Entrar com Microsoft
+            </button>
+          </div>
+
+          <p class="form-footer" id="formFooter">
+            Ainda não tem conta? <a href="#" onclick="toggleAuthMode('signup'); return false;">Criar conta grátis</a>
+          </p>
         </div>
-
-        <form onsubmit="return false;">
-          <div class="field">
-            <label for="email">E-mail corporativo</label>
-            <input type="email" id="email" placeholder="seu@mercado.com" autocomplete="email" />
-          </div>
-          <div class="field">
-            <label for="senha">Senha</label>
-            <input type="password" id="senha" placeholder="Sua senha" autocomplete="current-password" />
-          </div>
-          <div class="form-row-between">
-            <label><input type="checkbox" /> Manter conectado</label>
-            <a href="#">Esqueci minha senha</a>
-          </div>
-          <button class="btn-continue" type="submit">
-            Continuar
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" /></svg>
-          </button>
-        </form>
-
-        <div class="divider">ou conecte-se com</div>
-
-        <div class="sso">
-          <button class="sso-btn" type="button">
-            <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.2s2.7-6.2 6-6.2c1.9 0 3.2.8 3.9 1.5l2.6-2.6C16.9 3.1 14.7 2.2 12 2.2 6.9 2.2 2.7 6.4 2.7 12s4.2 9.8 9.3 9.8c5.4 0 9-3.8 9-9.1 0-.6-.1-1.1-.1-1.5H12Z"/></svg>
-            Entrar com Google
-          </button>
-          <button class="sso-btn" type="button">
-            <svg viewBox="0 0 23 23"><path fill="#F35325" d="M1 1h10v10H1z"/><path fill="#81BC06" d="M12 1h10v10H12z"/><path fill="#05A6F0" d="M1 12h10v10H1z"/><path fill="#FFBA08" d="M12 12h10v10H12z"/></svg>
-            Entrar com Microsoft
-          </button>
-        </div>
-
-        <p class="form-footer">Ainda não tem conta? <a href="../landing/index.html#cadastro">Iniciar teste grátis</a></p>
       </div>
     </div>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      // Configuração do Supabase
+      const SUPABASE_URL = window.__ENV_SUPABASE_URL || localStorage.getItem('PRECIFICA_SUPABASE_URL') || 'https://pxubluofynemndcbhjcv.supabase.co';
+      const SUPABASE_ANON_KEY = window.__ENV_SUPABASE_ANON_KEY || localStorage.getItem('PRECIFICA_SUPABASE_ANON_KEY') || 'sb_publishable_nZ3OMYEP1YszHcnv2R-DLg_wFlBn_ZI';
+
+      let currentMode = 'login'; // 'login' ou 'signup'
+      let supabaseClient = null;
+
+      function getSupabaseClient() {
+        if (!supabaseClient && window.supabase) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+        return supabaseClient;
+      }
+
+      function toggleAuthMode(mode) {
+        currentMode = mode;
+        hideAlert();
+        const title = document.getElementById('formTitle');
+        const subtitle = document.getElementById('formSubtitle');
+        const nameField = document.getElementById('nameField');
+        const companyField = document.getElementById('companyField');
+        const rememberRow = document.getElementById('rememberRow');
+        const btnText = document.getElementById('btnSubmitText');
+        const footer = document.getElementById('formFooter');
+
+        if (mode === 'signup') {
+          title.textContent = 'Criar conta';
+          subtitle.textContent = 'Comece seu teste de 14 dias grátis no Precifica+.';
+          nameField.style.display = 'block';
+          companyField.style.display = 'block';
+          rememberRow.style.display = 'none';
+          btnText.textContent = 'Criar minha conta';
+          footer.innerHTML = 'Já tem uma conta? <a href="#" onclick="toggleAuthMode(\'login\'); return false;">Entrar</a>';
+        } else {
+          title.textContent = 'Entrar';
+          subtitle.textContent = 'Acesse sua conta para gerenciar margens e estoque com IA.';
+          nameField.style.display = 'none';
+          companyField.style.display = 'none';
+          rememberRow.style.display = 'flex';
+          btnText.textContent = 'Continuar';
+          footer.innerHTML = 'Ainda não tem conta? <a href="#" onclick="toggleAuthMode(\'signup\'); return false;">Criar conta grátis</a>';
+        }
+      }
+
+      function showAlert(message, type = 'error') {
+        const alertEl = document.getElementById('authAlert');
+        if (!alertEl) return;
+        alertEl.textContent = message;
+        alertEl.className = 'auth-alert ' + type;
+      }
+
+      function hideAlert() {
+        const alertEl = document.getElementById('authAlert');
+        if (alertEl) {
+          alertEl.className = 'auth-alert';
+          alertEl.textContent = '';
+        }
+      }
+
+      function setLoading(isLoading) {
+        const btn = document.getElementById('btnLogin');
+        if (!btn) return;
+        btn.disabled = isLoading;
+        if (isLoading) {
+          btn.classList.add('loading');
+        } else {
+          btn.classList.remove('loading');
+        }
+      }
+
+      // Verifica se o usuário já possui sessão ativa ao abrir a página
+      document.addEventListener('DOMContentLoaded', async () => {
+        const client = getSupabaseClient();
+        if (!client || SUPABASE_URL.includes('YOUR_SUPABASE_PROJECT_ID')) {
+          return;
+        }
+
+        try {
+          const { data: { session }, error } = await client.auth.getSession();
+          if (session && !error) {
+            window.location.href = 'dashboard.html';
+          }
+        } catch (err) {
+          console.warn('Erro ao verificar sessão:', err);
+        }
+      });
+
+      // Submit unificado: Login ou Cadastro
+      async function handleAuthSubmit(event) {
+        if (event) event.preventDefault();
+        hideAlert();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('senha').value;
+        const nome = document.getElementById('nome').value.trim();
+        const empresa = document.getElementById('empresa').value.trim();
+
+        if (!email || !password) {
+          showAlert('Preencha seu e-mail e senha.');
+          return;
+        }
+
+        const client = getSupabaseClient();
+        if (!client) {
+          showAlert('Não foi possível inicializar o Supabase.');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          if (currentMode === 'signup') {
+            // CADASTRO DE NOVO USUÁRIO
+            const { data, error } = await client.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: {
+                  full_name: nome || email.split('@')[0],
+                  company: empresa || 'Meu Supermercado'
+                }
+              }
+            });
+
+            if (error) {
+              showAlert(error.message || 'Erro ao criar conta. Verifique os dados informados.');
+              setLoading(false);
+              return;
+            }
+
+            if (data.session) {
+              showAlert('Conta criada com sucesso! Redirecionando...', 'success');
+              setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            } else if (data.user) {
+              showAlert('Conta criada com sucesso! Se a confirmação de e-mail estiver ativa no Supabase, verifique sua caixa de entrada.', 'success');
+              setLoading(false);
+            }
+          } else {
+            // LOGIN DE USUÁRIO EXISTENTE
+            const { data, error } = await client.auth.signInWithPassword({
+              email: email,
+              password: password
+            });
+
+            if (error) {
+              if (error.message.includes('Invalid login credentials')) {
+                showAlert('E-mail ou senha incorretos. Ainda não tem conta? Clique em "Criar conta grátis" abaixo.');
+              } else if (error.message.includes('Email not confirmed')) {
+                showAlert('Por favor, confirme seu e-mail antes de entrar.');
+              } else {
+                showAlert(error.message || 'Erro ao autenticar.');
+              }
+              setLoading(false);
+              return;
+            }
+
+            if (data && data.session) {
+              showAlert('Login realizado com sucesso! Redirecionando...', 'success');
+              setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+            }
+          }
+        } catch (err) {
+          console.error('Erro de autenticação:', err);
+          showAlert('Ocorreu um erro inesperado ao conectar ao Supabase.');
+          setLoading(false);
+        }
+      }
+
+      // Login Social (Google / Microsoft Azure)
+      async function handleOAuth(provider) {
+        hideAlert();
+        const client = getSupabaseClient();
+        if (!client) return;
+
+        try {
+          const redirectTo = new URL('dashboard.html', window.location.href).href;
+          const { data, error } = await client.auth.signInWithOAuth({
+            provider: provider,
+            options: { redirectTo: redirectTo }
+          });
+          if (error) showAlert(error.message || 'Erro ao iniciar login social.');
+        } catch (err) {
+          showAlert('Erro ao conectar com provedor.');
+        }
+      }
+
+      // Recuperação de Senha
+      async function handleForgotPassword(event) {
+        if (event) event.preventDefault();
+        hideAlert();
+
+        const email = document.getElementById('email').value.trim();
+        if (!email) {
+          showAlert('Digite seu e-mail no campo acima e clique em "Esqueci minha senha" novamente.');
+          document.getElementById('email').focus();
+          return;
+        }
+
+        const client = getSupabaseClient();
+        if (!client) return;
+
+        setLoading(true);
+        try {
+          const redirectTo = new URL('login.html', window.location.href).href;
+          const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
+
+          if (error) {
+            showAlert(error.message || 'Não foi possível solicitar a recuperação.');
+          } else {
+            showAlert('E-mail de recuperação enviado! Verifique sua caixa de entrada.', 'success');
+          }
+        } catch (err) {
+          showAlert('Erro ao enviar solicitação de recuperação.');
+        } finally {
+          setLoading(false);
+        }
+      }
+    </script>
   </body>
 </html>

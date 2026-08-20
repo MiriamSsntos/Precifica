@@ -495,14 +495,68 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-function handleLogin() {
+// Configuração Supabase da Landing Page
+const LANDING_SUPABASE_URL = window.__ENV_SUPABASE_URL || localStorage.getItem('PRECIFICA_SUPABASE_URL') || 'https://pxubluofynemndcbhjcv.supabase.co';
+const LANDING_SUPABASE_ANON_KEY = window.__ENV_SUPABASE_ANON_KEY || localStorage.getItem('PRECIFICA_SUPABASE_ANON_KEY') || 'sb_publishable_nZ3OMYEP1YszHcnv2R-DLg_wFlBn_ZI';
+
+let landingSupabaseClient = null;
+function getLandingSupabaseClient() {
+  if (!landingSupabaseClient && window.supabase) {
+    landingSupabaseClient = window.supabase.createClient(LANDING_SUPABASE_URL, LANDING_SUPABASE_ANON_KEY);
+  }
+  return landingSupabaseClient;
+}
+
+async function handleLogin() {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value.trim();
   if (!email || !password) {
     alert('Preencha seu e-mail e senha para continuar.');
     return;
   }
-  alert('Área do cliente em desenvolvimento. Em breve você poderá acessar o sistema completo do Precifica+ direto daqui!');
+
+  const client = getLandingSupabaseClient();
+  if (!client) {
+    alert('Cliente Supabase não inicializado.');
+    return;
+  }
+
+  const submitBtn = document.querySelector('.login-modal .btn-continue') || document.querySelector('.login-modal .form-submit');
+  const originalText = submitBtn ? submitBtn.innerHTML : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Entrando...';
+  }
+
+  try {
+    const { data, error } = await client.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        alert('E-mail ou senha incorretos.');
+      } else if (error.message.includes('API key')) {
+        alert('Chave do Supabase inválida. Certifique-se de usar a chave "anon public" do Supabase (que começa com eyJ...).');
+      } else {
+        alert('Erro ao autenticar: ' + (error.message || 'Verifique seus dados.'));
+      }
+      return;
+    }
+
+    if (data && data.session) {
+      window.location.href = '../painel/dashboard.html';
+    }
+  } catch (err) {
+    console.error('Erro no login:', err);
+    alert('Erro inesperado ao conectar ao Supabase.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
+  }
 }
 
 // Botão Voltar ao Topo
