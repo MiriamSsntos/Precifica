@@ -505,5 +505,48 @@ function handleLogin() {
   alert('Área do cliente em desenvolvimento. Em breve você poderá acessar o sistema completo do Precifica+ direto daqui!');
 }
 
+// Botão Voltar ao Topo
+function initScrollToTop() {
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  if (!scrollTopBtn) return;
+
+  function checkScroll() {
+    const y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    if (y > 250) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  checkScroll();
+
+  scrollTopBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollToTop();
+  });
+}
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+  if (document.documentElement) {
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }
+}
+window.scrollToTop = scrollToTop;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initScrollToTop);
+} else {
+  initScrollToTop();
+}
+
 // Inicializa os ícones do Lucide
-lucide.createIcons();
+if (typeof lucide !== 'undefined' && lucide.createIcons) {
+  lucide.createIcons();
+}
