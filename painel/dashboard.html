@@ -469,5 +469,67 @@
         </div>
       </div>
     </main>
+
+    <!-- Supabase JS Client & Auth check -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = window.__ENV_SUPABASE_URL || localStorage.getItem('PRECIFICA_SUPABASE_URL') || 'https://YOUR_SUPABASE_PROJECT_ID.supabase.co';
+      const SUPABASE_ANON_KEY = window.__ENV_SUPABASE_ANON_KEY || localStorage.getItem('PRECIFICA_SUPABASE_ANON_KEY') || 'YOUR_SUPABASE_ANON_KEY';
+
+      let supabaseClient = null;
+
+      function getSupabaseClient() {
+        if (!supabaseClient && window.supabase && !SUPABASE_URL.includes('YOUR_SUPABASE_PROJECT_ID')) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+        return supabaseClient;
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const client = getSupabaseClient();
+        if (!client) return;
+
+        try {
+          const { data: { session }, error } = await client.auth.getSession();
+          if (!session || error) {
+            // Se o projeto estiver configurado e o usuário não tiver sessão, redireciona para login
+            window.location.href = 'login.html';
+            return;
+          }
+
+          if (session && session.user) {
+            const userEmail = session.user.email || '';
+            const userNameEl = document.querySelector('.user-chip .name');
+            const userAvatarEl = document.querySelector('.user-chip .user-avatar');
+            const pageHeadingEl = document.querySelector('.page-heading h1');
+
+            if (userEmail) {
+              const displayName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || userEmail.split('@')[0];
+              if (userNameEl) userNameEl.textContent = displayName;
+              if (pageHeadingEl) pageHeadingEl.textContent = `Olá, ${displayName} 👋`;
+              if (userAvatarEl) {
+                const initials = displayName.slice(0, 2).toUpperCase();
+                userAvatarEl.textContent = initials;
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('Verificação de sessão:', err);
+        }
+
+        // Adiciona logout ao clicar no user chip
+        const userChip = document.querySelector('.user-chip');
+        if (userChip) {
+          userChip.style.cursor = 'pointer';
+          userChip.title = 'Clique para sair';
+          userChip.addEventListener('click', async () => {
+            if (confirm('Deseja sair da sua conta?')) {
+              await client.auth.signOut();
+              window.location.href = 'login.html';
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
