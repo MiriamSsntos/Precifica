@@ -2010,6 +2010,67 @@
         text-decoration: underline;
       }
 
+      /* ─── BOTÃO VOLTAR AO TOPO ─── */
+      .scroll-top-btn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        color: #059669;
+        border: 1.5px solid rgba(5, 150, 105, 0.25);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 99999;
+        pointer-events: auto;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(16px) scale(0.9);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .scroll-top-btn.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+      .scroll-top-btn:hover {
+        background: #059669;
+        color: #ffffff;
+        border-color: #059669;
+        box-shadow: 0 14px 28px -4px rgba(5, 150, 105, 0.4), 0 6px 10px -2px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px) scale(1.06);
+      }
+      .scroll-top-btn:active {
+        transform: translateY(-1px) scale(0.98);
+      }
+      .scroll-top-btn svg {
+        width: 22px;
+        height: 22px;
+        transition: transform 0.2s ease;
+      }
+      .scroll-top-btn:hover svg {
+        transform: translateY(-2px);
+      }
+      @media (max-width: 768px) {
+        .scroll-top-btn {
+          bottom: 20px;
+          right: 20px;
+          width: 44px;
+          height: 44px;
+        }
+        .scroll-top-btn svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
       /* ─── ACESSIBILIDADE ─── */
       @media (prefers-reduced-motion: reduce) {
         *,
