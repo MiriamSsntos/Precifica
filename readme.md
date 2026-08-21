@@ -4,9 +4,9 @@ O **Precifica+** é uma plataforma B2B SaaS preditiva para gestão de estoque e 
 
 **Arquitetura (monorepo):**
 
-- `landing/` — site principal de comunicação/vendas, **HTML puro** (SEO máximo) → `precifica-landing.vercel.app`
-- `painel/` — painel do cliente, **React + Vite + TypeScript** → `painel-precifica.vercel.app`
-- `api/` — backend **Python + FastAPI** (matéria de backend) com PostgreSQL + Supabase Auth
+- `landing/` — site principal de comunicação/vendas, **HTML puro** (SEO máximo) → `precifica-rouge.vercel.app`
+- `painel/` — painel do cliente, **React + Vite + TypeScript** → `precifica-rouge.vercel.app/painel/`
+- **Supabase** — Auth, PostgreSQL com RLS e engine de estoque em Views/RPC SQL
 - `trello/` — quadro Kanban do projeto
 
 > Roadmap, decisões e fases: [docs/planejamento.md](docs/planejamento.md). Contexto técnico: [AGENTS.md](AGENTS.md).
@@ -41,11 +41,13 @@ A interface vai além do HTML/CSS estático, implementando conceitos avançados 
 
 ## 🛠️ Tecnologias Utilizadas
 
-Para garantir leveza, carregamento instantâneo e zero dependências pesadas, o projeto foi desenvolvido puramente com:
+O projeto combina uma landing leve com um painel moderno e backend gerenciado:
 
 * **HTML5:** Estruturação semântica e acessível.
 * **CSS3:** Layouts modernos com **CSS Grid** e **Flexbox**, além do uso estratégico de variáveis CSS (`:root`) para controle do tema dinâmico.
 * **JavaScript Vanilla (ES6+):** Manipulação de DOM, lógica de validação de formulários, controle de animações complexas, manipulação de API gráfica do Canvas e algoritmos de interpolação matemática para scroll suave.
+* **React + Vite + TypeScript:** Stack planejada para o painel do cliente.
+* **Supabase:** autenticação, PostgreSQL, RLS e engine de estoque em Views/RPC SQL.
 
 ---
 
@@ -81,10 +83,10 @@ Precifica+/
 │   ├── sitemap.xml     # SEO
 │   ├── 404.html        # Página de erro
 │   └── src/            # css/, js/, assets/
-├── painel/             # Painel do cliente (painel.precifica.com.br)
+├── painel/             # Painel do cliente (/painel/ no mesmo deploy)
 │   ├── login.html      # Tela de login
-│   └── dashboard.html  # Dashboard (mockado — Supabase na Fase 4)
-├── docs/planejamento.md # Arquitetura e roadmap
+│   └── dashboard.html  # Dashboard mockado e funcional com Supabase Auth
+├── docs/               # Planejamento, schema, seed e futura engine SQL
 ├── AGENTS.md           # Contexto técnico do projeto
 ├── dev.ps1             # Servidor local de preview
 ├── readme.md           # Este arquivo
