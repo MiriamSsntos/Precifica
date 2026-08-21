@@ -2,22 +2,23 @@
 
 > Documento vivo: atualizar sempre que uma decisão mudar ou uma fase for concluída.
 > Data de criação: ago/2026. Autor: Miriam (faculdade). Equipe: revisar antes de executar.
+> **Mudança de direção (ago/2026):** professor aprovou uso apenas do Supabase — sem backend Python próprio.
 
 ---
 
 ## 1. Visão geral
 
-Precifica+ é um SaaS B2B de IA para **gestão de estoque e precificação de produtos perecíveis** (supermercados e hortifrútis). O sistema previne desperdício automatizando precificação, monitorando validades e disparando alertas de estoque baixo.
+Precifica+ é um SaaS B2B de IA para gestão de estoque e precificação de produtos perecíveis (supermercados/hortifrútis). Projeto acadêmico que futuramente será produção real; hoje usa dados protótipo. O usuário é iniciante e está aprendendo o fluxo profissional — priorize clareza e simplicidade, explicando decisões quando relevante.
 
-**Três partes (monorepo):**
+**Duas partes + Supabase (monorepo):**
 
 | Parte | URL (hoje) | Domínio futuro | Conteúdo |
 |---|---|---|---|
-| Landing | `precifica-landing.vercel.app` | `precifica.com.br` | Página principal de comunicação/vendas. Foco: SEO + conversão + ads. |
-| Painel | `painel-precifica.vercel.app` | `painel.precifica.com.br` | Login + dashboard (dados do cliente). Privado, `noindex`. |
-| API | Render free | `api.precifica.com.br` (futuro) | Backend Python: regras de estoque/preço + auth. |
+| Landing | `precifica-rouge.vercel.app` | `precifica.com.br` | Página principal de comunicação/vendas. Foco: SEO + conversão + ads. |
+| Painel | `precifica-rouge.vercel.app/painel/` | `painel.precifica.com.br` | Login + dashboard (dados do cliente). Privado, `noindex`. React + Vite + TS. |
+| Supabase | `pxubluofynemndcbhjcv.supabase.co` | — | Auth (JWT), PostgreSQL + RLS, Views/RPC = engine v1. |
 
-**Público:** gerentes de supermercados/hortifrútis. **Idioma:** pt-BR. **Custo: R$ 0.**
+Público: gerentes de supermercados/hortifrútis. Idioma: pt-BR. **Custo total: R$ 0.**
 
 ---
 
@@ -27,136 +28,112 @@ Precifica+ é um SaaS B2B de IA para **gestão de estoque e precificação de pr
 |---|---|---|---|
 | 1 | Landing | **HTML/CSS/JS puro, estática** | Melhor SEO/Core Web Vitals possíveis; já está pronta. |
 | 2 | Painel | **React + Vite + TypeScript** | Padrão de mercado, componentes, CI/CD real; landing não é afetada. |
-| 3 | Backend | **Python + FastAPI escrito do zero** | A matéria é backend: o professor vê rotas, middleware, JWT, SQL e regras de negócio. Python é o futuro da engine de IA. |
-| 4 | Auth | **Supabase Auth (JWT)** — auth externo | Auth é commodity (prática de mercado: Auth0/Clerk/Supabase). A API Python valida o JWT e autoriza por `user_id`. Alinhar com o professor. |
-| 5 | Banco | **PostgreSQL do Supabase** (só banco) | Postgres grátis. A API conecta direto via pooler (porta 6543, IPv4). RLS ativo + filtro por `user_id` na API (dupla proteção). |
-| 6 | Engine | **v1 = só lógica de estoque** (regras em Python) | Escopo seguro para a faculdade: markup, validade, alertas. IA fica como módulo futuro (`api/engine/` já separado). Projeto pronto > projeto grande. |
-| 7 | Deploy | **Vercel (landing + painel) + Render (API)** | Tudo grátis. Render "dorme" após 15 min sem requisições (cold start ~50s — aceito; abrir o site 1 min antes da demo). |
-| 8 | Domínio | **Nenhum por enquanto** — URLs padrão Vercel | Nome da marca ainda indefinido. `og:url`/`canonical` apontam para a URL Vercel; trocar quando houver DNS. |
-| 9 | Git | **Branches + PR + Conventional Commits** | Aprender pipeline profissional desde já; `main` é produção. |
-| 10 | Custo | **R$ 0** | Supabase Free + Vercel Hobby + Render Free. |
+| 3 | Backend | **Sem backend próprio — Supabase-only** | Professor aprovou (ago/2026); Auth + Postgres + Views/RPC cobrem tudo. Menos escopo, mais foco no produto. |
+| 4 | Auth | **Supabase Auth (JWT)** — auth externo | Commodity de mercado (Auth0/Clerk/Supabase). Painel usa `supabase-js` direto. |
+| 5 | Banco | **PostgreSQL do Supabase** (pooler 6543 ou PostgREST) | Postgres grátis. Painel acessa via `supabase-js` + RLS ativo (filtro por `auth.uid()`). |
+| 6 | Engine v1 | **SQL no próprio Supabase** (views/RPC) | Roda junto ao banco, zero infra, painel só lê resultados. IA fica fase futura. |
+| 7 | Deploy | **Vercel único projeto** (`/` → landing, `/painel/` → painel) | Mesma origem = sessão compartilhada; um deploy só. `noindex` no painel. |
+| 8 | Domínio | **Nenhum por enquanto** — URLs padrão Vercel | `og:url`/`canonical` apontam para `precifica-rouge.vercel.app`. |
+| 9 | Git | **Branches `feat/<fase>` + PR + Conventional Commits** | Aprender pipeline profissional desde já; `main` é produção. |
+| 10 | Custo | **R$ 0** | Supabase Free + Vercel Hobby. |
 
 ---
 
 ## 3. Arquitetura alvo
 
 ```
-┌─────────────────────┐        ┌──────────────────────┐
-│  Vercel — Landing   │        │  Vercel — Painel     │
-│  landing/index.html │        │  painel/ (React+Vite)│
-│  HTML puro (SEO)    │        │  supabase-js (login) │
-│  Web3Forms (leads)  │        │  fetch → API (dados) │
-└─────────┬───────────┘        └──────────┬───────────┘
-          │                               │ Authorization: Bearer <JWT>
-          │                               ▼
-          │                      ┌─────────────────────┐
-          │                      │  Render — API (Python) │
-          │                      │  FastAPI: /docs (Swagger)│
-          │                      │  middleware JWT (pyjwt)  │
-          │                      │  rotas, schemas, regras  │
-          │                      │  engine/ (lógica estoque)│
-          │                      └──────────┬──────────────┘
-          │                                 │ psycopg/SQLAlchemy (pooler 6543)
-          │                                 ▼
-          │                        ┌─────────────────────┐
-          └──── leads (webhook)    │  Supabase           │
-                                   │  • PostgreSQL (RLS) │
-                                   │  • Auth (JWT)       │
-                                   └─────────────────────┘
+┌──────────────────────────────────────┐
+│  Vercel — projeto único              │
+│  /               → landing (HTML)    │
+│  /painel/        → React + Vite      │
+│  vercel.json + arquivos do monorepo  │
+└──────────────┬───────────────────────┘
+               │ supabase-js (anon key + JWT da sessão)
+               ▼
+┌──────────────────────────────────────┐
+│  Supabase                            │
+│  • Auth (JWT, email)                 │
+│  • PostgreSQL + RLS (auth.uid())     │
+│  • Views/RPC = engine v1 (estoque)   │
+└──────────────────────────────────────┘
 ```
 
-### Fluxo de autenticação (sem bloqueios front/back)
+### Fluxo de autenticação (sem API intermediária)
 
-1. **Painel (React)**: `supabase-js` → `signInWithPassword` → recebe o **JWT**.
-2. **Painel → API**: toda requisição leva `Authorization: Bearer <JWT>`.
-3. **API (FastAPI)**: middleware decodifica o JWT (biblioteca `pyjwt`, secret do projeto no `.env`), extrai `sub` = `user_id`.
-4. **Consultas**: sempre filtradas por `user_id` na API **+** RLS nas tabelas (dupla proteção, padrão de site sério).
+1. **Painel (React)**: `supabase-js` → `signInWithPassword` / `signUp` → recebe o **JWT** na sessão local.
+2. **Painel → Supabase**: toda query via `supabase-js` leva o `Authorization: Bearer <JWT>` automaticamente.
+3. **Supabase (PostgREST/RLS)**: valida o JWT, extrai `sub` = `user_id`, aplica policies `auth.uid() = user_id`.
 
 ### Estrutura de pastas (alvo)
 
 ```
 Precifica+/
-├── AGENTS.md               # Contexto para agentes de IA (init)
+├── AGENTS.md               # Contexto para agentes de IA
 ├── readme.md               # Apresentação do repo
-├── dev.ps1                 # Servidor local da landing (porta 8000)
+├── dev.ps1                 # Servidor local (porta 8000, raiz do repo)
+├── vercel.json             # Rewrites: / → landing, /painel/ → React
+├── .env.example            # Placeholders de credenciais
 ├── docs/
 │   ├── planejamento.md     # Este documento
-│   └── git-workflow.md     # Fluxo de branches/PR da equipe
+│   ├── git-workflow.md     # Fluxo de branches/PR
+│   ├── schema.sql          # Tabelas + RLS + trigger perfil
+│   ├── seed.sql            # Dados protótipo (demo@precifica.app)
+│   └── engine.sql          # Views/RPC da engine v1 (Fase 4)
 ├── trello/
-│   ├── index.html          # Quadro Kanban do projeto (fonte de status)
-│   └── trello-data.json    # Dados do quadro (sincronizar com o HTML sempre)
-├── landing/                # → precifica-landing.vercel.app (HTML puro)
+│   ├── index.html          # Quadro Kanban (GitHub Pages)
+│   └── trello-data.json    # Fonte única de dados do quadro
+├── landing/                # → precifica-rouge.vercel.app (HTML puro)
 │   ├── index.html
 │   ├── robots.txt / sitemap.xml / 404.html
 │   └── src/ (css, js, assets)
-├── painel/                 # → painel-precifica.vercel.app (React+Vite+TS)
-│   ├── src/ (componentes, páginas)
-│   └── (scaffold do Vite criado na Fase 5)
-└── api/                    # → Render (Python FastAPI)
-    ├── app/ (main.py, routers/, models/, schemas/, services/, engine/)
-    ├── tests/ (pytest)
-    ├── seed.sql
-    └── requirements.txt
+└── painel/                 # → /painel/ no mesmo deploy (React+Vite+TS)
+    ├── src/ (componentes, páginas)
+    └── (scaffold Vite criado na Fase 5)
 ```
 
-> **Quadro da equipe**: GitHub Pages publica `trello/` a partir da branch `main` → `https://miriamssntos.github.io/Precifica/trello/`. Fonte única de dados: `trello-data.json` (o HTML não embute dados). A equipe pode commitar direto na `main` pelo próprio quadro (token GitHub fine-grained, escopo `contents:write` — exceção documentada da regra de PR, pois é ferramenta interna). Auto-refresh de 60s + foco da aba.
-
-> `painel/login.html` e `painel/dashboard.html` (mockups atuais) servirão de **referência de design** para o React — o visual será reaproveitado via design tokens.
+> **Quadro da equipe**: GitHub Pages publica `trello/` a partir da `main` → `https://miriamssntos.github.io/Precifica/trello/`. Fonte única: `trello/trello-data.json`. A equipe pode commitar direto na `main` via UI do quadro (exceção documentada).
 
 ---
 
 ## 4. Banco de dados (PostgreSQL — Supabase)
 
-### Tabelas propostas
+### Tabelas atuais (já aplicadas via `docs/schema.sql`)
 
 | Tabela | Campos principais | Finalidade |
 |---|---|---|
-| `profiles` | `id` (FK auth.users), `nome`, `empresa`, `plano`, `created_at` | Perfil do usuário logado |
+| `profiles` | `id` (FK auth.users), `nome`, `empresa`, `plano`, `telefone`, `cidade`, `portfolio_skus`, `created_at` | Perfil do usuário logado |
 | `categories` | `id`, `user_id`, `nome`, `slug` | Categorias de produto do usuário |
 | `products` | `id`, `user_id`, `category_id`, `nome`, `sku`, `custo`, `preco_venda`, `estoque_atual`, `estoque_min`, `validade`, `created_at` | Estoque e precificação |
-| `price_history` | `id`, `product_id`, `preco_anterior`, `preco_novo`, `motivo`, `created_at` | Histórico de reajustes |
-| `promotions` | `id`, `product_id`, `desconto_pct`, `data_inicio`, `data_fim`, `status` | Promoções sugeridas |
-| `alerts` | `id`, `user_id`, `product_id`, `tipo` (validade/estoque), `mensagem`, `lida`, `created_at` | Alertas do dashboard |
+| `price_history` | `id`, `product_id`, `user_id`, `preco_anterior`, `preco_novo`, `motivo`, `created_at` | Histórico de reajustes |
+| `promotions` | `id`, `product_id`, `user_id`, `desconto_pct`, `preco_promocional`, `data_inicio`, `data_fim`, `status` | Promoções sugeridas |
+| `alerts` | `id`, `user_id`, `product_id`, `tipo`, `mensagem`, `lida`, `created_at` | Alertas do dashboard |
 
 ### Segurança
 
-- **RLS**: policies `user_id = auth.uid()` em todas as tabelas.
-- A API conecta com o **Postgres direto** (não usa PostgREST): string do pooler (porta 6543, transacional) no `.env`.
-- Chaves/secret do Supabase ficam em `.env` gitignored (`.env.example` com placeholders versionado).
+- **RLS**: policies `auth.uid() = user_id` (ou `id` em profiles) em todas as tabelas.
+- Painel usa `supabase-js` com a **anon key** — o JWT da sessão é enviado automaticamente; RLS é a proteção real.
+- Chaves/secret ficam em `.env` gitignored; versionar apenas `.env.example`.
 
 ### Seed (dados protótipo)
 
-Supermercado fictício (ex.: Hortifruti Delícia): ~10 produtos em categorias (hortifruti, laticínios, açougue, padaria), com custo, preço, validade e alertas — espelhando os números que o `painel/dashboard.html` mockado exibe, para a demo bater com o design.
+`docs/seed.sql` espelha o mockup do dashboard: Supermercado "Mercado Central" (Hortifruti Delícia) com ~10 produtos nas categorias Hortifruti, Laticínios, Açougue, Padaria, Mercearia, Bebidas — com custo, preço, validade e alertas (Iogurte vencendo, Feijão crítico, Óleo margem corrigida).
 
 ---
 
-## 5. API Python (FastAPI) — matéria de backend
+## 5. Engine v1 — Lógica de estoque (SQL no Supabase)
 
-### Stack
+Regras simples isoladas em `docs/engine.sql` (será criado na Fase 4):
 
-- **FastAPI** + **Uvicorn** (servidor), **Pydantic** (schemas/validação), **SQLAlchemy** (models/ORM), **psycopg** (driver Postgres), **pyjwt** (validação do JWT do Supabase), **pytest** (testes).
-- Python 3.10+ (já instalado na máquina) com `venv` + `requirements.txt`.
-
-### Endpoints previstos
-
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/health` | Status da API |
-| GET/POST/PATCH/DELETE | `/products` | CRUD de produtos (sempre por `user_id`) |
-| GET | `/categories` | Lista categorias |
-| GET | `/alerts` | Alertas (validade/estoque) |
-| GET | `/stats` | Resumo do dashboard (totais, margens, giro) |
-| POST | `/engine/recalc` | Recalcula sugestões de preço/alerta (lógica de estoque) |
-| GET | `/docs` | Swagger UI (testável na banca) |
-
-### Engine v1 — lógica de estoque (sem IA)
-
-Regras simples em Python, isoladas em `api/app/engine/`:
-- **Margem**: `preco_venda = custo / (1 - margem_desejada)`.
-- **Validade**: alerta quando `validade - hoje <= X dias`.
+- **Margem**: `preco_venda = custo / (1 - margem_desejada)` → view/RPC sugere preço.
+- **Validade**: `dias_para_vencer = validade - CURRENT_DATE`; alerta se `<= X dias`.
 - **Estoque**: alerta quando `estoque_atual <= estoque_min`.
-- **Sugestão**: reajuste de preço conforme giro (velocidade de saída).
-- IA (promoções automáticas) entra depois como novo módulo dentro da mesma pasta.
+- **Giro**: velocidade de saída (últimos N dias) → sugestão de reposição/preço.
+- **Views principais a criar**:
+  - `v_product_metrics`: `margem_atual`, `dias_para_vencer`, `status_validade`, `giro_estimado`.
+  - `v_alertas_validade`, `v_alertas_estoque`, `v_alertas_margem` → unificam em `v_alertas`.
+  - `v_dashboard_stats`: economia mês, produtos otimizados, promoções ativas, margem média.
+  - RPC `recalcular_sugestoes()` opcional para reprocessar em lote.
+- IA (promoções automáticas) entra depois como módulo separado.
 
 ---
 
@@ -175,62 +152,70 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 - [x] `robots.txt`, `sitemap.xml`, `404.html` criados
 - [x] `dev.ps1` (preview local) criado e validado (tudo 200)
 
-### Fase 2 — SEO da landing (branch `feat/fase2-seo`)
-- [ ] Corrigir `og:url` (bug: `precificaplus.com.br`) e adicionar `canonical` → `https://precifica-landing.vercel.app/`
+### Fase 2 — SEO da landing (🔶 em andamento / branch `feat/fase2-seo`)
+- [x] `og:url` corrigido → `https://precifica-rouge.vercel.app`
+- [ ] `canonical` apontando para a URL Vercel
 - [ ] Gerar `og:image` 1200x630 (PNG com branding Precifica+)
 - [ ] Adicionar `theme-color` e revisar JSON-LD
 - [ ] Validar no Google Rich Results / Lighthouse
 
-### Fase 3 — Supabase (usuário cria o projeto; agentes fornecem SQL)
-- [x] Criar projeto Supabase (free) — UI manual do usuário
-- [x] Aplicar schema SQL + RLS + seed protótipo (`docs/schema.sql` + `docs/seed.sql`)
-- [ ] Criar conta demo (Auth → Users: `demo@precifica.app` / `demo1234`, depois rodar o seed)
-- [x] Guardar credenciais em `.env` gitignored (`.env.example` versionado)
-- [x] Cadastro público na landing antecipado da Fase 8: formulário cria conta (`signUp`) → preenche perfil → redireciona ao painel. Validação do lead pela equipe/backend fica para depois.
+### Fase 3 — Supabase + Cadastro público + Deploy único (✅ concluída / branch `feat/fase3-supabase`)
+- [x] Projeto Supabase criado (plano grátis) — usuário
+- [x] Schema SQL + RLS + seed protótipo (`docs/schema.sql` + `docs/seed.sql`)
+- [x] Conta demo no Supabase Auth (`demo@precifica.app` / `demo1234`, seed roda depois)
+- [x] Credenciais em `.env` gitignored + `.env.example` versionado
+- [x] **Cadastro público antecipado da Fase 8**: formulário da landing cria conta (`signUp`), preenche perfil, redireciona ao painel
+- [x] **Deploy único Vercel**: rewrite de `/` para a landing e `/painel/` servido no mesmo projeto (mesma origem = sessão compartilhada)
 
-### Fase 4 — API Python (branch `feat/fase4-api`)
-- [ ] Scaffold FastAPI (`venv` + `requirements.txt` + `app/`)
-- [ ] Middleware de auth JWT (Supabase)
-- [ ] CRUD de produtos/categorias + stats + alertas
-- [ ] Engine v1 (lógica de estoque: margem, validade, giro)
-- [ ] Testes `pytest`
-- [ ] Validar `/docs` (Swagger) no navegador
+### Fase 4 — Engine v1 no Supabase (SQL) (branch `feat/fase4-engine`)
+- [ ] Scaffold `docs/engine.sql` com views/RPC
+- [ ] View `v_product_metrics` (margem, dias_para_vencer, giro)
+- [ ] Views de alertas: validade crítica, estoque baixo, margem baixa
+- [ ] View `v_dashboard_stats` (resumo para o painel)
+- [ ] Seed atualizado já povoa dados compatíveis
+- [ ] Testar queries no SQL Editor do Supabase
 
-### Fase 5 — Painel React (branch `feat/fase5-painel`)
+### Fase 5 — Painel React + supabase-js (branch `feat/fase5-painel`)
 - [ ] Scaffold Vite + TypeScript
-- [ ] Página de login com `supabase-js` (reaproveitar design do mockup)
+- [ ] Página de login/signup com `supabase-js` (reaproveitar design do mockup)
 - [ ] Session guard + logout
-- [ ] Dashboard consumindo a API Python (fetch + JWT)
+- [ ] CRUD de produtos/categorias via `supabase-js` (RLS protege)
+- [ ] Dashboard consumindo `v_dashboard_stats`, `v_alertas`, `v_product_metrics`
 - [ ] `npm run build` sem erros
 
-### Fase 6 — Deploy + CI/CD (branch `feat/fase6-deploy`)
-- [ ] Vercel: `landing/` → `precifica-landing.vercel.app`
-- [ ] Vercel: `painel/` → `painel-precifica.vercel.app` (+ `noindex`)
-- [ ] Render: API Python (auto-deploy via GitHub; cold start aceito)
-- [ ] Fluxo completo em produção: landing → login → dashboard
-- [ ] CI/CD funcionando: push → deploy automático
+### Fase 6 — Deploy final + CI/CD (branch `feat/fase6-deploy`)
+- [x] Vercel: landing publicada (`precifica-rouge.vercel.app`)
+- [x] Vercel: painel publicado no mesmo projeto (rewrites) — **falta `noindex`**
+- [ ] `noindex` no painel: `<meta name="robots" content="noindex">` + header `X-Robots-Tag` no Vercel
+- [x] Fluxo completo em produção: landing → login/cadastro → dashboard
+- [x] CI/CD funcionando: push → deploy automático (Vercel)
 
 ### Fase 7 — Documentação acadêmica (branch `feat/fase7-docs`)
-- [ ] README completo (arquitetura, schema, fluxo de auth)
-- [ ] Justificativa: auth externo (Supabase) é prática de mercado; backend real = API Python
-- [ ] Print do Swagger `/docs` para a apresentação
+- [ ] README completo (arquitetura, schema, fluxo de auth, engine SQL)
+- [ ] Justificativa: **supabase-only aprovado pelo professor**; backend real = engine no banco + RLS
+- [ ] Prints do painel + SQL Editor para a apresentação
 
 ### Fase 8 — Opcional (só se sobrar tempo)
-- [ ] Integração com IA na engine (promoções automáticas)
-- [x] Cadastro público de usuário (antecipado — feito na Fase 3)
+- [ ] Integração com IA na engine (promoções automáticas via Edge Function ou client-side)
+- [ ] Validação de leads pela equipe (workflow manual ou futura Edge Function)
+- [ ] Alertas via WhatsApp
+- [ ] Planos e cobrança (Essencial, Scale IA, Enterprise)
+- [ ] Domínio próprio + SEO definitivo
 
 ---
 
 ## 7. Checklist SEO da landing
 
-- [ ] `title` único e descritivo (~60 chars) — ok
-- [ ] `meta description` (~150 chars) — ok
-- [ ] Open Graph: `og:title`, `og:description`, `og:image`, `og:url`, `og:type`, `og:locale`
+- [x] `title` único e descritivo (~60 chars)
+- [x] `meta description` (~150 chars)
+- [x] Open Graph: `og:title`, `og:description`, `og:type`, `og:locale`
+- [ ] `og:image` 1200x630 (PNG)
+- [x] `og:url` → `https://precifica-rouge.vercel.app`
+- [ ] `canonical` → URL Vercel
 - [ ] Twitter Cards (`summary_large_image`)
-- [ ] `canonical` → URL Vercel (até ter domínio próprio)
-- [ ] `robots.txt` + `sitemap.xml` — criados; revisar URLs
+- [ ] `theme-color`
 - [ ] JSON-LD (Organization, Product, FAQ)
-- [ ] `theme-color`, favicon, Apple touch icon
+- [ ] `robots.txt` + `sitemap.xml` — revisar URLs
 - [ ] Texto alternativo (`alt`) em imagens
 - [ ] Performance: HTML estático, fontes com `preconnect`
 
@@ -238,10 +223,14 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 
 ## 8. Deploy (passo a passo para o usuário)
 
-1. **Vercel** (conta grátis com GitHub): Projeto 1 → Root Directory `landing`; Projeto 2 → Root Directory `painel` (build: `npm run build`). URLs geradas: `precifica-landing.vercel.app`, `painel-precifica.vercel.app`.
-2. **Render** (conta grátis): New Web Service → repo `Precifica+` → Root Directory `api` → Build: `pip install -r requirements.txt` → Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT` → variáveis de ambiente do `.env`. Auto-deploy em cada push na main.
-3. **Noindex do painel**: `<meta name="robots" content="noindex">` + header `X-Robots-Tag` no Vercel.
-4. **Domínio próprio (futuro)**: Vercel Settings → Domains (CNAME) + Render → Custom Domain. Atualizar `og:url`/`canonical`/`sitemap`/`robots.txt`.
+1. **Vercel** (conta grátis com GitHub):
+   - New Project → Import `Precifica+` → **Root Directory: (vazio = raiz do repo)**
+   - Build Command: vazio enquanto o painel usa os mockups estáticos; será atualizado na Fase 5 para gerar o build React
+   - Output Directory: (vazio)
+   - `vercel.json` na raiz reescreve `/` para `/landing/index.html`; `/painel/*` é servido pela pasta do painel no mesmo projeto
+   - URLs geradas: `precifica-rouge.vercel.app` (landing) e `/painel/` (React)
+2. **Noindex do painel**: `<meta name="robots" content="noindex">` no `index.html` do React + header `X-Robots-Tag: noindex` no Vercel (Project → Settings → Headers).
+3. **Domínio próprio (futuro)**: Vercel Settings → Domains (CNAME). Atualizar `og:url`/`canonical`/`sitemap`/`robots.txt`.
 
 ---
 
@@ -249,24 +238,23 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 
 | Item | Status |
 |---|---|
-| Nome do produto/domínio ainda indefinido — SEO usa URL Vercel até decidir | 🔴 Em aberto |
-| Professor aceitar auth externo (Supabase) na matéria de backend — alinhar antes | 🔴 Em aberto |
-| Repo local 5 commits atrás do `origin/main` — fazer pull antes de criar branches | ⏳ Antes da Fase 2 |
-| Cold start da API no Render (~50s) — abrir o site antes da apresentação | ✅ Aceito |
-| Postgres do Supabase pausa após 1 semana sem uso — reativar com 1 clique | ✅ Aceito |
+| Nome do produto/domínio indefinido — SEO usa URL Vercel até decidir | 🔴 Em aberto |
+| Professor aceitar auth externo (Supabase) na matéria de backend | ✅ **Resolvido (ago/2026)** — aprovou supabase-only |
+| Repo local atrás do `origin/main` | ✅ **Resolvido** — sincronizado |
+| Cold start inexistente (sem Render) | ✅ Resolvido |
+| Postgres do Supabase pausa após 1 semana sem uso | ✅ Aceito — reativar com 1 clique |
 | Chaves/secret: `.env` gitignored, `.env.example` versionado | Regra permanente |
-| Dados protótipo devem espelhar o mockup do painel | Fase 3 |
-| Painel não pode ser indexado pelo Google | Fase 6 |
+| Dados protótipo devem espelhar o mockup do painel | Fase 3 ✅ / Fase 4 |
+| Painel não pode ser indexado pelo Google (falta `noindex`) | ⏳ Fase 6 |
 | Custo permanece R$ 0 | Regra permanente |
 
 ---
 
 ## 10. Ideias futuras (fora do escopo atual)
 
-- **Quadro da equipe**: funciona com commit automático via GitHub API (drag & drop → `chore:` na main) — Supabase Realtime segue como opção futura se precisar de concorrência melhor.
-
-- Engine de IA (promoções automáticas com machine learning)
-- Integração do formulário de lead com a API (validação da equipe/backend do cadastro)
+- Engine de IA (promoções automáticas com ML — opcional via Edge Function)
+- Validação de leads pela equipe (workflow manual ou futura automação)
+- Integração do formulário de lead com engine/alertas
 - Planos e cobrança (Essencial, Scale IA, Enterprise)
 - Domínio próprio + SEO definitivo
-- Modo escuro e modal de vídeo demo (pendências antigas do `todo.md`)
+- Modo escuro e modal de vídeo demo (pendências antigas)
