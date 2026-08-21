@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/landing/index.html" },
+    { "source": "/src/:path*", "destination": "/landing/src/:path*" },
+    { "source": "/robots.txt", "destination": "/landing/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/landing/sitemap.xml" }
+  ]
+}
