@@ -75,28 +75,29 @@
     "phase": "f3",
     "label": "Fase 3",
     "text": "Criar projeto Supabase (plano grátis) — usuário",
-    "col": "todo"
+    "col": "done"
   },
   {
     "id": "f3-2",
     "phase": "f3",
     "label": "Fase 3",
     "text": "Schema SQL + RLS + seed protótipo",
-    "col": "todo"
+    "col": "done"
   },
   {
     "id": "f3-3",
     "phase": "f3",
     "label": "Fase 3",
     "text": "Conta demo no Supabase Auth",
-    "col": "todo"
+    "col": "doing",
+    "done": false
   },
   {
     "id": "f3-4",
     "phase": "f3",
     "label": "Fase 3",
     "text": "Credenciais em .env gitignored (+ .env.example)",
-    "col": "todo"
+    "col": "done"
   },
   {
     "id": "f4-1",
@@ -236,6 +237,6 @@
     "phase": "f8",
     "label": "Fase 8",
     "text": "Opcional: cadastro público de usuário",
-    "col": "todo"
+    "col": "done"
   }
 ]

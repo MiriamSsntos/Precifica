@@ -349,13 +349,16 @@ function toggleFaq(btn) {
   }
 }
 
-function submitForm() {
+async function submitForm() {
   const nome = document.getElementById("nome").value.trim();
   const email = document.getElementById("email").value.trim();
   const mercado = document.getElementById("mercado").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
+  const cidade = document.getElementById("cidade").value.trim();
   const produtos = document.getElementById("produtos").value;
   const plano = document.getElementById("plano").value;
+  const senha = document.getElementById("senha").value;
+  const senha2 = document.getElementById("senha2").value;
   const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const telRx = /^\(?\d{2,}\)?\s?\d{4,5}-?\d{4}$/;
   let valid = true;
@@ -366,11 +369,17 @@ function submitForm() {
   const errProdutos = document.getElementById("err-produtos");
   const errPlano = document.getElementById("err-plano");
   const errLgpd = document.getElementById("err-lgpd");
+  const errSenha = document.getElementById("err-senha");
+  const errSenha2 = document.getElementById("err-senha2");
+  const errForm = document.getElementById("err-form");
   errNome.style.display = errEmail.style.display = errMercado.style.display = "";
   if (errTelefone) errTelefone.style.display = "";
   if (errProdutos) errProdutos.style.display = "";
   if (errPlano) errPlano.style.display = "";
   if (errLgpd) errLgpd.style.display = "";
+  if (errSenha) errSenha.style.display = "";
+  if (errSenha2) errSenha2.style.display = "";
+  if (errForm) errForm.style.display = "";
   if (!nome) {
     errNome.style.display = "block";
     valid = false;
@@ -395,35 +404,82 @@ function submitForm() {
     if (errPlano) errPlano.style.display = "block";
     valid = false;
   }
+  if (senha.length < 6) {
+    if (errSenha) errSenha.style.display = "block";
+    valid = false;
+  }
+  if (senha !== senha2) {
+    if (errSenha2) errSenha2.style.display = "block";
+    valid = false;
+  }
   const lgpdChecked = document.getElementById("lgpd-consent").checked;
   if (!lgpdChecked) {
     if (errLgpd) errLgpd.style.display = "block";
     valid = false;
   }
   if (!valid) return;
+
+  const client = getLandingSupabaseClient();
+  if (!client) {
+    if (errForm) {
+      errForm.textContent = "Não foi possível conectar ao serviço de cadastro. Tente novamente.";
+      errForm.style.display = "block";
+    }
+    return;
+  }
+
   const btn = document.getElementById("form-submit-btn");
   btn.classList.add("loading");
   btn.disabled = true;
-  const data = {
-    nome, email, mercado,
-    telefone: document.getElementById("telefone").value.trim(),
-    cidade: document.getElementById("cidade").value.trim(),
-    produtos: document.getElementById("produtos").value,
-    plano: document.getElementById("plano").value,
-    lgpd_consent: true,
-  };
-  fetch("https://api.web3forms.com/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      access_key: "SUA_CHAVE_AQUI",
-      ...data,
-    }),
-  }).catch(() => { }).finally(() => {
+
+  try {
+    const { data, error } = await client.auth.signUp({
+      email,
+      password: senha,
+      options: {
+        data: { full_name: nome, company: mercado },
+      },
+    });
+
+    if (error) {
+      let msg = "Erro ao criar conta. Verifique os dados e tente novamente.";
+      if (/already registered|já cadastrad/i.test(error.message)) {
+        msg = 'Este e-mail já possui conta. Use o botão "Já sou cliente" para entrar.';
+      } else if (/password/i.test(error.message)) {
+        msg = "A senha deve ter pelo menos 6 caracteres.";
+      } else if (/rate limit/i.test(error.message)) {
+        msg = "Muitas tentativas. Aguarde alguns minutos e tente de novo.";
+      }
+      if (errForm) {
+        errForm.textContent = msg;
+        errForm.style.display = "block";
+      }
+      btn.classList.remove("loading");
+      btn.disabled = false;
+      return;
+    }
+
+    if (data && data.user && data.session) {
+      await client
+        .from("profiles")
+        .update({ telefone, cidade, portfolio_skus: produtos, plano })
+        .eq("id", data.user.id);
+    }
+
     document.getElementById("form-area").style.display = "none";
     document.getElementById("success-msg").style.display = "block";
     if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
-  });
+    setTimeout(() => {
+      window.location.href = "../painel/dashboard.html";
+    }, 1400);
+  } catch (e) {
+    if (errForm) {
+      errForm.textContent = "Erro inesperado ao criar conta. Tente novamente.";
+      errForm.style.display = "block";
+    }
+    btn.classList.remove("loading");
+    btn.disabled = false;
+  }
 }
 
 const revealObserver = new IntersectionObserver(

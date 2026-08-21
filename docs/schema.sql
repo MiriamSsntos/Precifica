@@ -156,3 +156,11 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ==========================================================
+-- 10. CAMPOS EXTRAS DO PERFIL (dados do formulário de cadastro)
+-- Executar uma única vez; seguro re-executar (idempotente)
+-- ==========================================================
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS telefone VARCHAR(30);
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS cidade VARCHAR(120);
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS portfolio_skus VARCHAR(60);
