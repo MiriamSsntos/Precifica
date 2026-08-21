@@ -182,10 +182,11 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 - [ ] Validar no Google Rich Results / Lighthouse
 
 ### Fase 3 — Supabase (usuário cria o projeto; agentes fornecem SQL)
-- [ ] Criar projeto Supabase (free) — UI manual do usuário
-- [ ] Aplicar schema SQL + RLS + seed protótipo
-- [ ] Criar conta demo (Auth → Users)
-- [ ] Guardar credenciais em `.env` gitignored
+- [x] Criar projeto Supabase (free) — UI manual do usuário
+- [x] Aplicar schema SQL + RLS + seed protótipo (`docs/schema.sql` + `docs/seed.sql`)
+- [ ] Criar conta demo (Auth → Users: `demo@precifica.app` / `demo1234`, depois rodar o seed)
+- [x] Guardar credenciais em `.env` gitignored (`.env.example` versionado)
+- [x] Cadastro público na landing antecipado da Fase 8: formulário cria conta (`signUp`) → preenche perfil → redireciona ao painel. Validação do lead pela equipe/backend fica para depois.
 
 ### Fase 4 — API Python (branch `feat/fase4-api`)
 - [ ] Scaffold FastAPI (`venv` + `requirements.txt` + `app/`)
@@ -216,7 +217,7 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 
 ### Fase 8 — Opcional (só se sobrar tempo)
 - [ ] Integração com IA na engine (promoções automáticas)
-- [ ] Cadastro público de usuário
+- [x] Cadastro público de usuário (antecipado — feito na Fase 3)
 
 ---
 
@@ -265,8 +266,7 @@ Regras simples em Python, isoladas em `api/app/engine/`:
 - **Quadro da equipe**: funciona com commit automático via GitHub API (drag & drop → `chore:` na main) — Supabase Realtime segue como opção futura se precisar de concorrência melhor.
 
 - Engine de IA (promoções automáticas com machine learning)
-- Cadastro público na landing (CTA → criar conta → painel)
-- Integração do formulário de lead com a API (substituir Web3Forms)
+- Integração do formulário de lead com a API (validação da equipe/backend do cadastro)
 - Planos e cobrança (Essencial, Scale IA, Enterprise)
 - Domínio próprio + SEO definitivo
 - Modo escuro e modal de vídeo demo (pendências antigas do `todo.md`)

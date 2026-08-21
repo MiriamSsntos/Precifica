@@ -476,6 +476,18 @@
           </div>
           <div class="form-row two">
             <div class="form-group">
+              <label for="senha">Crie sua Senha</label>
+              <input type="password" id="senha" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
+              <span class="form-error" id="err-senha">A senha deve ter pelo menos 6 caracteres.</span>
+            </div>
+            <div class="form-group">
+              <label for="senha2">Confirme a Senha</label>
+              <input type="password" id="senha2" placeholder="Repita a senha" autocomplete="new-password" />
+              <span class="form-error" id="err-senha2">As senhas não coincidem.</span>
+            </div>
+          </div>
+          <div class="form-row two">
+            <div class="form-group">
               <label for="mercado">Nome da Empresa</label>
               <input type="text" id="mercado" placeholder="Mercado Central Ltda" autocomplete="organization" />
               <span class="form-error" id="err-mercado">Informe o nome da empresa.</span>
@@ -515,14 +527,15 @@
             </label>
             <span class="form-error" id="err-lgpd">Você precisa aceitar a Política de Privacidade.</span>
           </div>
-          <button class="form-submit" id="form-submit-btn" type="submit">Solicitar Acesso</button>
+          <span class="form-error" id="err-form" style="text-align: center; display: none;"></span>
+          <button class="form-submit" id="form-submit-btn" type="submit">Criar minha conta</button>
           <p class="form-privacy"><i data-lucide="lock" class="lucide-inline"></i> Proteção total dos seus dados em conformidade com a LGPD. Sem spam.</p>
         </form>
 
         <div class="success-msg" id="success-msg">
           <span class="success-icon"><i data-lucide="zap"></i></span>
-          <h3>Acesso Configurado!</h3>
-          <p>Nossa equipe está estruturando suas credenciais de IA.<br />Verifique seu WhatsApp e e-mail em instantes.</p>
+          <h3>Conta criada com sucesso!</h3>
+          <p>Seu teste de 14 dias começou.<br />Redirecionando você para o painel...</p>
         </div>
       </div>
     </section>
