@@ -102,35 +102,42 @@ ALTER TABLE public.promotions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.alerts ENABLE ROW LEVEL SECURITY;
 
 -- Policies para PROFILES
+DROP POLICY IF EXISTS "Usuários podem ver seu próprio perfil" ON public.profiles;
 CREATE POLICY "Usuários podem ver seu próprio perfil" 
   ON public.profiles FOR SELECT 
   USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Usuários podem atualizar seu próprio perfil" ON public.profiles;
 CREATE POLICY "Usuários podem atualizar seu próprio perfil" 
   ON public.profiles FOR UPDATE 
   USING (auth.uid() = id);
 
 -- Policies para CATEGORIES
+DROP POLICY IF EXISTS "Usuários gerenciam suas próprias categorias" ON public.categories;
 CREATE POLICY "Usuários gerenciam suas próprias categorias" 
   ON public.categories FOR ALL 
   USING (auth.uid() = user_id);
 
 -- Policies para PRODUCTS
+DROP POLICY IF EXISTS "Usuários gerenciam seus próprios produtos" ON public.products;
 CREATE POLICY "Usuários gerenciam seus próprios produtos" 
   ON public.products FOR ALL 
   USING (auth.uid() = user_id);
 
 -- Policies para PRICE_HISTORY
+DROP POLICY IF EXISTS "Usuários gerenciam seu histórico de preços" ON public.price_history;
 CREATE POLICY "Usuários gerenciam seu histórico de preços" 
   ON public.price_history FOR ALL 
   USING (auth.uid() = user_id);
 
 -- Policies para PROMOTIONS
+DROP POLICY IF EXISTS "Usuários gerenciam suas promoções" ON public.promotions;
 CREATE POLICY "Usuários gerenciam suas promoções" 
   ON public.promotions FOR ALL 
   USING (auth.uid() = user_id);
 
 -- Policies para ALERTS
+DROP POLICY IF EXISTS "Usuários gerenciam seus alertas" ON public.alerts;
 CREATE POLICY "Usuários gerenciam seus alertas" 
   ON public.alerts FOR ALL 
   USING (auth.uid() = user_id);
