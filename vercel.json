@@ -1,5 +1,6 @@
 {
   "buildCommand": "npm run build -w precifica-painel",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/", "destination": "/landing/index.html" },
     { "source": "/src/:path*", "destination": "/landing/src/:path*" },
