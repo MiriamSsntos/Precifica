@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex" />
     <title>Produtos — Precifica+</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
       rel="stylesheet"
@@ -15,9 +15,10 @@
     <link rel="stylesheet" href="src/css/global.css" />
     <link rel="stylesheet" href="src/css/sidebar.css" />
     <link rel="stylesheet" href="src/css/topbar.css" />
-    <link rel="stylesheet" href="src/css/dashboard.css" />
+    <link rel="stylesheet" href="src/css/produtos.css" />
   </head>
   <body>
+    <!-- ================= SIDEBAR ================= -->
     <aside class="sidebar">
       <a href="dashboard.html" class="sb-logo">
         <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,6 +119,7 @@
       </div>
     </aside>
 
+    <!-- ================= MAIN ================= -->
     <main class="main">
       <div class="topbar">
         <div class="search-box">
@@ -150,21 +152,270 @@
       </div>
 
       <div class="page-heading">
-        <h1>Produtos</h1>
-        <p>Cadastro e gestão do seu catálogo, custos e estoque.</p>
+        <div>
+          <h1>Produtos</h1>
+          <p>Cadastro, precificação e acompanhamento de estoque de perecíveis.</p>
+        </div>
+        <button type="button" class="btn-add-product" id="btnOpenModal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Novo Produto
+        </button>
       </div>
 
+      <!-- Stat cards (KPIs) -->
+      <div class="stat-row">
+        <div class="card stat-card">
+          <div class="stat-label">Total de SKUs</div>
+          <div class="stat-value" id="kpiTotal">0</div>
+          <div class="stat-desc">Itens ativos no catálogo</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Validade Crítica</div>
+          <div class="stat-value" id="kpiValidade">0</div>
+          <div class="stat-desc alert">Vencem nos próximos 7 dias</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Estoque Baixo</div>
+          <div class="stat-value" id="kpiEstoque">0</div>
+          <div class="stat-desc warn">Abaixo do mínimo seguro</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Margem Média</div>
+          <div class="stat-value" id="kpiMargem">0.0%</div>
+          <div class="stat-desc ok">Geral do catálogo</div>
+        </div>
+      </div>
+
+      <!-- Filtros e Busca -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <div class="search-input-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <path stroke-linecap="round" d="m20 20-3.5-3.5" />
+            </svg>
+            <input type="text" id="searchProduct" placeholder="Buscar por nome ou SKU…" />
+          </div>
+          <select class="filter-select" id="filterCategoria">
+            <option value="todas">Todas as categorias</option>
+            <option value="hortifruti">Hortifruti</option>
+            <option value="laticínios">Laticínios</option>
+            <option value="padaria">Padaria</option>
+            <option value="mercearia">Mercearia</option>
+            <option value="bebidas">Bebidas</option>
+            <option value="açougue">Açougue</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <select class="filter-select" id="filterStatus">
+            <option value="todos">Todos os status</option>
+            <option value="validade">Validade próxima (≤ 7d)</option>
+            <option value="estoque">Estoque baixo</option>
+            <option value="margem_baixa">Margem baixa (&lt; 15%)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tabela de Produtos -->
       <div class="card">
-        <div class="card-head"><h3>Em construção</h3></div>
-        <p>
-          Esta seção está sendo desenvolvida. Em breve você poderá cadastrar SKUs, ajustar custos e
-          preços e acompanhar o estoque em tempo real.
-        </p>
+        <div class="card-head">
+          <h3>Catálogo de Produtos</h3>
+          <span class="tag">Tempo real</span>
+        </div>
+        <div class="table-wrap">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Produto &amp; SKU</th>
+                <th>Categoria</th>
+                <th>Unid.</th>
+                <th>Custo</th>
+                <th>Venda</th>
+                <th>Margem</th>
+                <th>Estoque</th>
+                <th>Validade</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Renderizado via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10" />
+            <path stroke-linecap="round" d="M12 8v4m0 4h.01" />
+          </svg>
+          <h4>Nenhum produto encontrado</h4>
+          <p>Tente ajustar os filtros ou cadastre um novo produto acima.</p>
+        </div>
       </div>
     </main>
 
+    <!-- ================= MODAL DE CADASTRO ================= -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="modalTitle">Cadastrar Novo Produto</h2>
+          <button
+            type="button"
+            class="btn-close-modal"
+            id="btnCloseModal"
+            title="Fechar"
+            aria-label="Fechar modal"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="20"
+              height="20"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <form id="formNewProduct">
+          <input type="hidden" id="prodEditId" name="prodEditId" value="" />
+          <div class="modal-body">
+            <div class="form-section-title">1. Identificação do Produto</div>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="prodNome">Nome do Produto *</label>
+                <input
+                  type="text"
+                  id="prodNome"
+                  name="prodNome"
+                  placeholder="Ex: Banana Prata Climatizada"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="prodSku">SKU / Código EAN</label>
+                <input
+                  type="text"
+                  id="prodSku"
+                  name="prodSku"
+                  placeholder="Ex: HOR-0010 ou 789..."
+                />
+              </div>
+
+              <div class="field">
+                <label for="prodCategoria">Categoria *</label>
+                <select id="prodCategoria" name="prodCategoria" required>
+                  <option value="">Selecione uma categoria…</option>
+                  <option value="Hortifruti">Hortifruti</option>
+                  <option value="Laticínios">Laticínios</option>
+                  <option value="Padaria">Padaria</option>
+                  <option value="Mercearia">Mercearia</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Açougue">Açougue</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <label for="prodUnidade">Unidade de Medida *</label>
+                <select id="prodUnidade" name="prodUnidade" required>
+                  <option value="kg" selected>Quilograma (kg)</option>
+                  <option value="un">Unidade (un)</option>
+                  <option value="g">Grama (g)</option>
+                  <option value="L">Litro (L)</option>
+                  <option value="ml">Mililitro (ml)</option>
+                  <option value="cx">Caixa / Fardo (cx)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-section-title">2. Custos &amp; Precificação</div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="prodCusto">Preço de Custo (R$) *</label>
+                <input
+                  type="number"
+                  id="prodCusto"
+                  name="prodCusto"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="prodPreco">Preço de Venda (R$) *</label>
+                <input
+                  type="number"
+                  id="prodPreco"
+                  name="prodPreco"
+                  step="0.01"
+                  min="0.01"
+                  placeholder="0.00"
+                  required
+                />
+              </div>
+
+              <div class="margin-preview-box">
+                <span class="label">Margem Bruta Estimada:</span>
+                <span class="value" id="marginPreviewValue">0.0% (R$ 0,00 lucro)</span>
+              </div>
+            </div>
+
+            <div class="form-section-title">3. Estoque &amp; Perecibilidade</div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="prodEstoque">Estoque Atual *</label>
+                <input
+                  type="number"
+                  id="prodEstoque"
+                  name="prodEstoque"
+                  min="0"
+                  value="10"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="prodEstoqueMin">Estoque Mínimo (Alerta) *</label>
+                <input
+                  type="number"
+                  id="prodEstoqueMin"
+                  name="prodEstoqueMin"
+                  min="0"
+                  value="5"
+                  required
+                />
+              </div>
+
+              <div class="field full">
+                <label for="prodValidade">Data de Validade (Lote atual) *</label>
+                <input type="date" id="prodValidade" name="prodValidade" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" id="btnCancelModal">Cancelar</button>
+            <button type="submit" class="btn-add-product" id="btnSubmitModal">
+              Salvar Produto
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= SCRIPTS ================= -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="src/js/supabase.js"></script>
+    <script src="src/js/produtos.js"></script>
     <script>
       initAuthGuard();
     </script>
