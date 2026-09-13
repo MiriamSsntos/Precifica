@@ -6,8 +6,8 @@
     { "source": "/src/:path*", "destination": "/landing/src/:path*" },
     { "source": "/robots.txt", "destination": "/landing/robots.txt" },
     { "source": "/sitemap.xml", "destination": "/landing/sitemap.xml" },
-    { "source": "/painel/assets/:path*", "destination": "/painel/dist/assets/:path*" },
-    { "source": "/painel/favicon.svg", "destination": "/painel/dist/favicon.svg" },
-    { "source": "/painel/:path*", "destination": "/painel/dist/index.html" }
+    { "source": "/painel/assets/:path*", "destination": "/painel-app/dist/assets/:path*" },
+    { "source": "/painel/favicon.svg", "destination": "/painel-app/dist/favicon.svg" },
+    { "source": "/painel/:path*", "destination": "/painel-app/dist/index.html" }
   ]
 }
