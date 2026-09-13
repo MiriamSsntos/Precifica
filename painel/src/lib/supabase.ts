@@ -7,55 +7,129 @@
  */
 import { createClient } from "@supabase/supabase-js";
 
-export interface Profile {
+export type Profile = {
   id: string;
   nome: string | null;
   empresa: string | null;
   plano: string | null;
   telefone: string | null;
   cidade: string | null;
-}
+};
 
-export interface Category {
+export type Category = {
   id: string;
   nome: string;
   slug: string | null;
-}
+};
 
-export interface Product {
+export type Product = {
   id: string;
   nome: string;
+  sku: string | null;
   preco_venda: number | string | null;
   custo: number | string | null;
   margem_atual: number | string | null;
   estoque_atual: number | string | null;
   estoque_min: number | string | null;
   validade: string | null;
-  unidade: string | null;
   category_id: string | null;
   created_at: string;
-}
+};
 
-export interface Promotion {
+export type Promotion = {
   id: string;
+  product_id: string;
+  desconto_pct: number | string;
+  preco_promocional: number | string | null;
+  data_inicio: string;
+  data_fim: string;
   status: string | null;
-}
+  created_at: string;
+};
 
-export interface AlertRow {
+export type AlertRow = {
   id: string;
   tipo: string;
   mensagem: string;
+  lida: boolean | null;
   created_at: string;
-}
+};
+
+export type ProductInsert = {
+  id?: string;
+  user_id?: string;
+  nome: string;
+  sku?: string | null;
+  category_id?: string | null;
+  custo?: number | string | null;
+  preco_venda?: number | string | null;
+  margem_atual?: number | string | null;
+  estoque_atual?: number | string | null;
+  estoque_min?: number | string | null;
+  validade?: string | null;
+  created_at?: string;
+};
+
+export type ProductUpdate = {
+  id?: string;
+  user_id?: string;
+  nome?: string;
+  sku?: string | null;
+  category_id?: string | null;
+  custo?: number | string | null;
+  preco_venda?: number | string | null;
+  margem_atual?: number | string | null;
+  estoque_atual?: number | string | null;
+  estoque_min?: number | string | null;
+  validade?: string | null;
+  created_at?: string;
+};
 
 interface Database {
   public: {
     Tables: {
-      profiles: { Row: Profile };
-      categories: { Row: Category };
-      products: { Row: Product };
-      promotions: { Row: Promotion };
-      alerts: { Row: AlertRow };
+      profiles: {
+        Row: Profile;
+        Insert: Partial<Profile>;
+        Update: Partial<Profile>;
+        Relationships: [];
+      };
+      categories: {
+        Row: Category;
+        Insert: Partial<Category>;
+        Update: Partial<Category>;
+        Relationships: [];
+      };
+      products: {
+        Row: Product;
+        Insert: ProductInsert;
+        Update: ProductUpdate;
+        Relationships: [];
+      };
+      promotions: {
+        Row: Promotion;
+        Insert: Partial<Promotion>;
+        Update: Partial<Promotion>;
+        Relationships: [];
+      };
+      alerts: {
+        Row: AlertRow;
+        Insert: Partial<AlertRow>;
+        Update: Partial<AlertRow>;
+        Relationships: [];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }
