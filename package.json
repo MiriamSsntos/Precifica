@@ -1,0 +1,30 @@
+{
+  "name": "precifica-plus",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dev tooling for Precifica+ (lint/format/checks). Landing stays npm-free at runtime.",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write \"landing/**/*.{html,css,js}\" \"painel/**/*.{html,css,js}\"",
+    "format:check": "prettier --check \"landing/**/*.{html,css,js}\" \"painel/**/*.{html,css,js}\"",
+    "lint:html": "html-validate landing/index.html landing/404.html painel/*.html",
+    "lint:css": "stylelint \"landing/**/*.css\" \"painel/**/*.css\"",
+    "lint:js": "eslint \"landing/**/*.js\" \"painel/**/*.js\"",
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js",
+    "check:jsonld": "node scripts/check-json-ld.mjs",
+    "check:links": "node scripts/check-local-links.mjs",
+    "check": "npm run check:jsonld && npm run check:links",
+    "verify": "npm run lint && npm run check"
+  },
+  "devDependencies": {
+    "eslint": "^10.10.0",
+    "globals": "^15.9.0",
+    "html-validate": "^9.5.0",
+    "prettier": "^3.3.3",
+    "stylelint": "^16.9.0",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

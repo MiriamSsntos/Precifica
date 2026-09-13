@@ -1,0 +1,132 @@
+/**
+ * Precifica+ — Estilos da Sidebar (Barra Lateral)
+ */
+
+.sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  padding: 0 6px;
+  text-decoration: none;
+}
+
+.sb-logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.sb-logo span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.sb-logo span em {
+  color: var(--primary);
+  font-style: normal;
+}
+
+.sb-section-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  padding: 0 12px;
+  margin: 18px 0 10px;
+}
+
+.sb-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sb-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.sb-link svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.sb-link:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.sb-link.active {
+  background: linear-gradient(90deg, rgb(5 150 105 / 12%), rgb(8 145 178 / 5%));
+  color: var(--primary);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.sb-upgrade {
+  margin-top: auto;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 16px;
+  background: linear-gradient(160deg, #ecfdf5, #f4f8f6);
+}
+
+.sb-upgrade h4 {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.sb-upgrade p {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.sb-upgrade button {
+  width: 100%;
+  border: none;
+  padding: 9px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--cyan-ai), var(--primary));
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.sb-upgrade button:hover {
+  opacity: 0.95;
+}
+
+@media (width <= 1100px) {
+  .sidebar {
+    display: none;
+  }
+}
