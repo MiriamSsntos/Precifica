@@ -7,6 +7,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import type { ReactNode } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { PageLoader } from "../components/ui/PageLoader";
 import type { Profile } from "../lib/supabase";
 import { getDisplayName, getInitials, supabase } from "../lib/supabase";
 
@@ -102,7 +103,7 @@ export function useAuth(): AuthContextValue {
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { session, loading } = useAuth();
   const location = useLocation();
-  if (loading) return <div className="auth-loading">Carregando sessão…</div>;
+  if (loading) return <PageLoader />;
   if (!session) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   return <>{children}</>;
 }
