@@ -1,0 +1,66 @@
+/* Página "em construção" (telas ainda não migradas do mockup). */
+
+.wrap {
+  max-width: 720px;
+}
+
+.heading {
+  margin-bottom: 26px;
+}
+
+.heading h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.heading p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 10.5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--primary-subtle);
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: 14px;
+}
+
+.text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.text code {
+  font-family: ui-monospace, monospace;
+  font-size: 12.5px;
+  background: var(--panel-2);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.back {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 13.5px;
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
