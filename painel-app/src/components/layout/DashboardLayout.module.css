@@ -205,6 +205,33 @@
   height: 16px;
 }
 
+.menuBtn {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menuBtn:hover {
+  background: #eaf3ee;
+}
+
+.menuBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.backdrop {
+  display: none;
+}
+
 .dot {
   position: absolute;
   top: 8px;
@@ -258,7 +285,42 @@
     grid-template-columns: 1fr;
   }
 
+  .menuBtn {
+    display: flex;
+  }
+
   .sidebar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 272px;
+    height: 100dvh;
+    z-index: 9500;
+    transform: translateX(-105%);
+    transition: transform 0.22s ease;
+  }
+
+  .open {
+    transform: none;
+    box-shadow: 0 20px 60px rgb(15 23 20 / 25%);
+  }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 9400;
+    background: rgb(15 23 20 / 45%);
+    border: none;
+    padding: 0;
+    cursor: default;
+  }
+}
+
+@media (width >= 1101px) {
+  .backdrop {
     display: none;
   }
 }
