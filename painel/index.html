@@ -63,12 +63,63 @@
         color: #5b6b64;
         margin: 0;
       }
+      #boot-splash .boot-error {
+        max-width: 440px;
+        background: #fff;
+        border: 1px solid #fecaca;
+        border-radius: 16px;
+        padding: 24px 26px;
+        text-align: center;
+        box-shadow: 0 16px 36px rgb(15 23 20 / 12%);
+      }
+      #boot-splash .boot-error strong {
+        display: block;
+        font-family: Outfit, system-ui, sans-serif;
+        font-size: 17px;
+        color: #b91c1c;
+        margin-bottom: 8px;
+      }
+      #boot-splash .boot-error p {
+        font-size: 13px;
+        color: #5b6b64;
+        margin: 0 0 6px;
+      }
+      #boot-splash .boot-error .hint {
+        font-size: 12px;
+        color: #98a49e;
+      }
       @keyframes boot-spin {
         to {
           transform: rotate(360deg);
         }
       }
     </style>
+    <script>
+      window.__bootErrors = [];
+      window.addEventListener("error", function (e) {
+        if (e && e.message) window.__bootErrors.push(String(e.message));
+      });
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          var splash = document.getElementById("boot-splash");
+          if (!splash || window.__bootErrors.length === 0) return;
+          splash.innerHTML = "";
+          var card = document.createElement("div");
+          card.className = "boot-error";
+          var title = document.createElement("strong");
+          title.textContent = "Não foi possível iniciar o painel";
+          var msg = document.createElement("p");
+          msg.textContent = window.__bootErrors[0];
+          var hint = document.createElement("p");
+          hint.className = "hint";
+          hint.textContent = "Verifique a configuração e recarregue a página.";
+          card.appendChild(title);
+          card.appendChild(msg);
+          card.appendChild(hint);
+          splash.appendChild(card);
+        }, 2500);
+      });
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
