@@ -7,7 +7,7 @@
   "scripts": {
     "format": "prettier --write \"landing/**/*.{html,css,js}\" \"painel/**/*.{html,css,js}\"",
     "format:check": "prettier --check \"landing/**/*.{html,css,js}\" \"painel/**/*.{html,css,js}\"",
-    "lint:html": "html-validate landing/index.html landing/404.html painel/*.html",
+    "lint:html": "html-validate landing/index.html landing/404.html landing/privacidade.html painel/*.html",
     "lint:css": "stylelint \"landing/**/*.css\" \"painel/**/*.css\"",
     "lint:js": "eslint \"landing/**/*.js\" \"painel/**/*.js\"",
     "lint": "npm run lint:html && npm run lint:css && npm run lint:js",

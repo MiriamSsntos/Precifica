@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://precifica.com.br/sitemap.xml
+Sitemap: https://precifica-rouge.vercel.app/sitemap.xml
