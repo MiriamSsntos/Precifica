@@ -28,8 +28,8 @@ Decisões tomadas (não reverter sem perguntar):
 
 ## Estado atual
 
-- `landing/` — publicada; cadastro/login Supabase funcionam. Faltam canonical, og:image, theme-color e validações SEO (Fase 2). É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público.
-- `painel/` — app React + Vite + TS + Biome (Fase 5 iniciada): fundação pronta (AuthContext + `<RequireAuth>`, router `/painel`, layout sidebar/topbar, Login com OAuth, Dashboard com dados reais do Supabase, placeholders para as demais telas). Mockup estático arquivado em `painel-legacy/` (só referência — fora do lint e do deploy). Env via `painel/.env` (ver `.env.example`; sem fallback hardcoded — sem env, o app falha alto com mensagem).
+- `landing/` — publicada e **finalizada** (Fase 2 de SEO aplicada: canonical, og:image, theme-color, OG/Twitter; efeitos removidos, modo eco permanente; `privacidade.html` com `noindex`; redirects pós-login para `/painel/`). Cadastro/login Supabase funcionam. É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público. Não alterar sem motivo — foco atual é o painel.
+- `painel/` — app React + Vite + TS + Biome (Fase 5): todas as telas migradas (Login, Dashboard, Produtos, Validades, Promoções, Relatórios, Config, Ajuda) + infra UI (Skeleton, Toast, ConfirmDialog, PageLoader). Mockup estático arquivado em `painel-legacy/` (só referência — fora do lint e do deploy). Env via `painel/.env` (ver `.env.example`; sem fallback hardcoded — sem env, o app falha alto com mensagem).
 - `docs/schema.sql` e `docs/seed.sql` — aplicados no Supabase; engine SQL entra em `docs/engine.sql` (Fase 4, ainda não criado).
 - `docs/planejamento.md` — arquitetura, schema e fases (LER antes de executar qualquer fase).
 - `docs/git-workflow.md` — fluxo de branches/PR da equipe (passo a passo para o usuário); reforça regras abaixo.
