@@ -28,8 +28,8 @@ Decisões tomadas (não reverter sem perguntar):
 
 ## Estado atual
 
-- `landing/` — publicada e **finalizada** (Fase 2 de SEO aplicada: canonical, og:image, theme-color, OG/Twitter; efeitos removidos, modo eco permanente; `privacidade.html` com `noindex`; redirects pós-login para `/painel/`). Cadastro/login Supabase funcionam. É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público. Não alterar sem motivo — foco atual é o painel.
-- `painel/` — app React + Vite + TS + Biome (Fase 5): todas as telas migradas (Login, Dashboard, Produtos, Validades, Promoções, Relatórios, Config, Ajuda) + infra UI (Skeleton, Toast, ConfirmDialog, PageLoader). Mockup estático arquivado em `painel-legacy/` (só referência — fora do lint e do deploy). Env via `painel/.env` (ver `.env.example`; sem fallback hardcoded — sem env, o app falha alto com mensagem).
+- `landing/` — publicada e **finalizada** (Fase 2 de SEO aplicada: canonical, og:image, theme-color, OG/Twitter; efeitos removidos, modo eco permanente; `privacidade.html` com `noindex`). Cadastro/login Supabase funcionam. É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público. Não alterar sem motivo — foco atual é o painel.
+- `painel/` — 8 páginas estáticas (login, dashboard, relatorios, config, ajuda + placeholders produtos, validades, promocoes) com auth real via Supabase e `src/js/supabase.js` compartilhado; serão substituídas pelo React (Fase 5), servindo de referência de design. Só os placeholders têm `noindex` por enquanto (pendência Fase 6 para as demais).
 - `docs/schema.sql` e `docs/seed.sql` — aplicados no Supabase; engine SQL entra em `docs/engine.sql` (Fase 4, ainda não criado).
 - `docs/planejamento.md` — arquitetura, schema e fases (LER antes de executar qualquer fase).
 - `docs/git-workflow.md` — fluxo de branches/PR da equipe (passo a passo para o usuário); reforça regras abaixo.
