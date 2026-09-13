@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-perf-mode="eco">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -139,28 +139,8 @@
         ]
       }
     </script>
-    <script>
-      (function () {
-        try {
-          var saved = localStorage.getItem("precifica_perf_mode");
-          var prefersReduced =
-            window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          var mode = saved || (prefersReduced ? "eco" : "effects");
-          document.documentElement.setAttribute("data-perf-mode", mode);
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
-    <canvas id="cyber-canvas" aria-hidden="true"></canvas>
-    <div id="ambient-layer" aria-hidden="true"></div>
-    <div class="parallax-glow" id="pg1" aria-hidden="true"></div>
-    <div class="parallax-glow" id="pg2" aria-hidden="true"></div>
-    <div class="parallax-glow" id="pg3" aria-hidden="true"></div>
-    <div id="scan-line" aria-hidden="true"></div>
-    <div class="bg-grid-tech" aria-hidden="true"></div>
-    <div class="bg-ambient-glow" aria-hidden="true"></div>
-
     <nav>
       <a class="nav-logo" href="#conteudo-principal">
         <div class="nav-logo-icon">
@@ -195,50 +175,6 @@
         <a href="#planos">Planos</a>
       </div>
       <div class="nav-actions">
-        <button
-          class="perf-toggle-btn"
-          id="perfToggleBtn"
-          onclick="togglePerfMode()"
-          type="button"
-          title="Alternar modo visual: Efeitos vs Economia de Energia"
-          aria-label="Alternar modo de efeitos visuais"
-        >
-          <span class="perf-icon-fx">
-            <svg
-              aria-hidden="true"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-            <span>Efeitos</span>
-          </span>
-          <span class="perf-icon-eco">
-            <svg
-              aria-hidden="true"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
-              />
-              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-            </svg>
-            <span>Eco</span>
-          </span>
-        </button>
         <a
           href="#"
           class="nav-login-btn"
@@ -256,10 +192,6 @@
     </nav>
 
     <div class="nav-mobile" id="nav-mobile">
-      <button class="perf-toggle-btn-mobile" onclick="togglePerfMode()" type="button">
-        <span class="perf-mobile-label">Modo Visual:</span>
-        <span class="perf-mobile-status" id="perfMobileStatus">⚡ Efeitos Ativos</span>
-      </button>
       <a href="#funcionalidades" onclick="closeMobile()">Funcionalidades</a>
       <a href="#como-funciona" onclick="closeMobile()">Motor de IA</a>
       <a href="#planos" onclick="closeMobile()">Planos</a>
@@ -315,7 +247,7 @@
           <div class="hero-stats">
             <div>
               <div class="hero-stat-val">Grátis</div>
-              <div class="hero-stat-label">Cartão de crédito exigido</div>
+              <div class="hero-stat-label">Sem cartão de crédito</div>
             </div>
             <div>
               <div class="hero-stat-val">−45%</div>
@@ -961,15 +893,6 @@
           </svg>
           Ambiente seguro. Sem taxas ocultas de cancelamento ou configuração inicial.
         </div>
-        <div class="countdown-wrap reveal-fade">
-          <div class="countdown-label">🚀 Oferta especial por tempo limitado</div>
-          <div class="countdown" id="countdown">
-            <div class="countdown-unit"><span id="cd-days">14</span><small>dias</small></div>
-            <div class="countdown-unit"><span id="cd-hours">00</span><small>horas</small></div>
-            <div class="countdown-unit"><span id="cd-mins">00</span><small>min</small></div>
-            <div class="countdown-unit"><span id="cd-secs">00</span><small>seg</small></div>
-          </div>
-        </div>
       </section>
 
       <section id="cadastro" class="signup-section" data-scene="signup">
@@ -1401,6 +1324,7 @@
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 Precifica+. Todos os direitos reservados.</span>
+        <span class="footer-academic">Protótipo acadêmico — dados ilustrativos.</span>
         <a href="privacidade.html">Políticas de Dados e Privacidade — LGPD</a>
       </div>
     </footer>
