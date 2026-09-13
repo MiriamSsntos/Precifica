@@ -22,7 +22,7 @@ Decisões tomadas (não reverter sem perguntar):
 - **Backend**: sem backend próprio. O professor aprovou a arquitetura Supabase-only em ago/2026. O painel usa `supabase-js` diretamente.
 - **Banco**: PostgreSQL do Supabase com RLS `auth.uid() = user_id`; a anon key é pública e a proteção real é o JWT + RLS.
 - **Engine v1**: SÓ lógica de estoque (margem, validade, giro, alertas) em Views/RPC SQL no Supabase (`docs/engine.sql`). IA é fase futura — não implementar sem pedir.
-- **Deploy**: projeto único na Vercel; rewrite de `/` para a landing e `/painel/*` para o build React (`painel/dist/`, com fallback SPA para `index.html`). Build no deploy: `npm run build -w precifica-painel` (ver `vercel.json`); env `VITE_*` cadastradas no dashboard da Vercel. Sem Render e sem domínio próprio por enquanto.
+- **Deploy**: projeto único na Vercel; rewrite de `/` para a landing e `/painel/*` para o build React (`painel/dist/`, com fallback SPA para `index.html`). Build no deploy: `npm run build -w precifica-painel` com `outputDirectory: "."` (a raiz é servida — sem isso o deploy falha com "No Output Directory named public"). Env `VITE_*` cadastradas no dashboard da Vercel. Sem Render e sem domínio próprio por enquanto.
 - **Git**: branches `feat/<fase>` + PR + Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`). NUNCA commitar direto na `main` — **exceção única**: `trello/trello-data.json` atualizado pela UI do quadro (ferramenta interna da equipe, commit `chore:` automático).
 - **Idioma**: pt-BR em produto e documentação. **Custo total: R$ 0.**
 
