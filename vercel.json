@@ -1,8 +1,13 @@
 {
+  "buildCommand": "npm run build -w precifica-painel",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/", "destination": "/landing/index.html" },
     { "source": "/src/:path*", "destination": "/landing/src/:path*" },
     { "source": "/robots.txt", "destination": "/landing/robots.txt" },
-    { "source": "/sitemap.xml", "destination": "/landing/sitemap.xml" }
+    { "source": "/sitemap.xml", "destination": "/landing/sitemap.xml" },
+    { "source": "/painel/assets/:path*", "destination": "/painel/dist/assets/:path*" },
+    { "source": "/painel/favicon.svg", "destination": "/painel/dist/favicon.svg" },
+    { "source": "/painel/:path*", "destination": "/painel/dist/index.html" }
   ]
 }

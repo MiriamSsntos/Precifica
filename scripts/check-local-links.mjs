@@ -1,7 +1,9 @@
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, extname, dirname, resolve } from "node:path";
 
-const roots = ["landing", "painel"];
+// Só a landing é verificada aqui: o painel React usa bundler/rotas SPA
+// (verificado por `tsc` + `vite build`) e o mockup fica em painel-legacy/.
+const roots = ["landing"];
 const attrPattern = /(?:href|src)=["']([^"'#]+?)["']/gi;
 
 function collectHtml(dir, out = []) {

@@ -11,9 +11,70 @@
 
 .stat-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
   margin-bottom: 20px;
+}
+
+/* Banner de Alerta Crítico de Validade */
+.validity-alert-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+  border: 1px solid rgb(220 38 38 / 25%);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+}
+
+.alert-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.alert-banner-content svg {
+  width: 28px;
+  height: 28px;
+  color: var(--neon-red);
+  flex-shrink: 0;
+}
+
+.validity-alert-banner h4 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--neon-red);
+  margin-bottom: 3px;
+}
+
+.validity-alert-banner p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.btn-alert-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  background: var(--neon-red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-alert-action:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
 }
 
 .stat-card .stat-label {
@@ -191,6 +252,42 @@
 .alert-item span {
   font-size: 11px;
   color: var(--text-dim);
+}
+
+.empty-catalog-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+  border: 1px solid rgb(5 150 105 / 20%);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.empty-catalog-banner h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+
+.empty-catalog-banner p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.empty-list-msg {
+  padding: 20px 10px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.empty-list-msg p {
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
 }
 
 @media (width <= 1100px) {

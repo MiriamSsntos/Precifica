@@ -4,17 +4,20 @@
   "private": true,
   "description": "Dev tooling for Precifica+ (lint/format/checks). Landing stays npm-free at runtime.",
   "type": "module",
+  "workspaces": ["painel"],
   "scripts": {
-    "format": "prettier --write \"landing/**/*.{html,css,js}\" \"painel/**/*.{html,css,js}\"",
-    "format:check": "prettier --check \"landing/**/*.{html,css,js}\" \"painel/**/*.{html,css,js}\"",
-    "lint:html": "html-validate landing/index.html landing/404.html landing/privacidade.html painel/*.html",
-    "lint:css": "stylelint \"landing/**/*.css\" \"painel/**/*.css\"",
-    "lint:js": "eslint \"landing/**/*.js\" \"painel/**/*.js\"",
+    "format": "prettier --write \"landing/**/*.{html,css,js}\"",
+    "format:check": "prettier --check \"landing/**/*.{html,css,js}\"",
+    "lint:html": "html-validate landing/index.html landing/404.html landing/privacidade.html",
+    "lint:css": "stylelint \"landing/**/*.css\"",
+    "lint:js": "eslint \"landing/**/*.js\"",
     "lint": "npm run lint:html && npm run lint:css && npm run lint:js",
     "check:jsonld": "node scripts/check-json-ld.mjs",
     "check:links": "node scripts/check-local-links.mjs",
     "check": "npm run check:jsonld && npm run check:links",
-    "verify": "npm run lint && npm run check"
+    "verify": "npm run lint && npm run check",
+    "dev:painel": "npm run dev -w precifica-painel",
+    "verify:painel": "npm run verify -w precifica-painel"
   },
   "devDependencies": {
     "eslint": "^10.10.0",

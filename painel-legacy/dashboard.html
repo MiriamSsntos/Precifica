@@ -151,16 +151,52 @@
       </div>
 
       <div class="page-heading">
-        <h1>Olá, Roberto 👋</h1>
-        <p>Aqui está o resumo da IA sobre seu estoque e suas margens hoje.</p>
+        <h1 id="greetingTitle">Olá 👋</h1>
+        <p id="greetingSub">Resumo em tempo real do seu estoque, margens e alertas no Supabase.</p>
       </div>
 
-      <!-- Stat cards -->
+      <!-- Banner exibido se o banco não tiver produtos cadastrados ainda -->
+      <div id="emptyCatalogBanner" class="card empty-catalog-banner" style="display: none">
+        <div>
+          <h4>Seu catálogo de produtos ainda não possui itens no banco</h4>
+          <p>Cadastre seus primeiros SKUs para visualizar estoque, margens e sugestões da IA.</p>
+        </div>
+        <a
+          href="produtos.html"
+          class="btn-secondary"
+          style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px"
+        >
+          Cadastrar Produtos &rarr;
+        </a>
+      </div>
+
+      <!-- Banner de Alerta Crítico se houver produtos vencidos no estoque -->
+      <div id="validityAlertBanner" class="card validity-alert-banner" style="display: none">
+        <div class="alert-banner-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <div>
+            <h4 id="validityAlertTitle">Atenção: Existem produtos vencidos no seu estoque!</h4>
+            <p id="validityAlertDesc">
+              Produtos ultrapassaram a data de validade. Verifique o catálogo para descarte ou
+              remarcação urgente.
+            </p>
+          </div>
+        </div>
+        <a href="produtos.html" class="btn-alert-action"> Verificar no Catálogo &rarr; </a>
+      </div>
+
+      <!-- Stat cards (dados reais do banco) -->
       <div class="stat-row">
         <div class="card stat-card">
-          <div class="stat-label">Economia Total (mês)</div>
-          <div class="stat-value">R$ 8.420</div>
-          <div class="stat-change up">↑ 14% vs. mês anterior</div>
+          <div class="stat-label">Margem Média do Catálogo</div>
+          <div class="stat-value" id="statMargemMedia">0.0%</div>
+          <div class="stat-change up" id="statMargemChange">Baseada nos produtos ativos</div>
           <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none">
             <defs>
               <linearGradient id="sparkGreen" x1="0" y1="0" x2="0" y2="1">
@@ -180,10 +216,11 @@
             />
           </svg>
         </div>
+
         <div class="card stat-card">
-          <div class="stat-label">Produtos Otimizados</div>
-          <div class="stat-value">2.142.950</div>
-          <div class="stat-change up">↑ 8% vs. mês anterior</div>
+          <div class="stat-label">Produtos Cadastrados</div>
+          <div class="stat-value" id="statTotalProdutos">0</div>
+          <div class="stat-change up" id="statProdutosChange">Carregando dados…</div>
           <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none">
             <defs>
               <linearGradient id="sparkCyan" x1="0" y1="0" x2="0" y2="1">
@@ -203,10 +240,35 @@
             />
           </svg>
         </div>
+
+        <div class="card stat-card">
+          <div class="stat-label">Validade Crítica &amp; Vencidos</div>
+          <div class="stat-value" id="statValidadeCritica">0</div>
+          <div class="stat-change" id="statValidadeChange">Conferindo validades…</div>
+          <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="sparkAmber" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#dc2626" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#dc2626" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <polyline
+              points="0,12 25,18 50,14 75,22 100,10 125,24 150,16 175,28 200,8"
+              fill="none"
+              stroke="#dc2626"
+              stroke-width="2"
+            />
+            <polygon
+              points="0,12 25,18 50,14 75,22 100,10 125,24 150,16 175,28 200,8 200,40 0,40"
+              fill="url(#sparkAmber)"
+            />
+          </svg>
+        </div>
+
         <div class="card stat-card">
           <div class="stat-label">Promoções Ativas</div>
-          <div class="stat-value">23</div>
-          <div class="stat-change up">↑ 5 nesta semana</div>
+          <div class="stat-value" id="statPromocoesAtivas">0</div>
+          <div class="stat-change up" id="statPromocoesChange">Regras vigentes</div>
           <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none">
             <defs>
               <linearGradient id="sparkPurple" x1="0" y1="0" x2="0" y2="1">
@@ -232,10 +294,10 @@
       <div class="grid">
         <div class="card line-chart-wrap">
           <div class="card-head">
-            <h3>Margem Média — Últimos 7 dias</h3>
-            <span class="tag">IA em tempo real</span>
+            <h3>Margem por Categoria</h3>
+            <span class="tag" id="chartMarginTag">Supabase Real</span>
           </div>
-          <svg viewBox="0 0 560 200" preserveAspectRatio="none">
+          <svg viewBox="0 0 560 200" preserveAspectRatio="none" id="lineChartSvg">
             <defs>
               <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#059669" stop-opacity="0.22" />
@@ -246,10 +308,12 @@
             <line x1="0" y1="90" x2="560" y2="90" stroke="rgba(15,23,20,0.06)" />
             <line x1="0" y1="140" x2="560" y2="140" stroke="rgba(15,23,20,0.06)" />
             <polygon
+              id="chartPolygon"
               points="0,150 80,110 160,130 240,70 320,90 400,45 480,60 560,30 560,190 0,190"
               fill="url(#lineFill)"
             />
             <polyline
+              id="chartPolyline"
               points="0,150 80,110 160,130 240,70 320,90 400,45 480,60 560,30"
               fill="none"
               stroke="#059669"
@@ -257,54 +321,20 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             />
-            <circle cx="240" cy="70" r="5" fill="#fff" stroke="#059669" stroke-width="3" />
-            <circle cx="400" cy="45" r="5" fill="#fff" stroke="#0891b2" stroke-width="3" />
-            <circle cx="560" cy="30" r="5" fill="#fff" stroke="#059669" stroke-width="3" />
           </svg>
           <div class="chart-legend">
-            <span><i style="background: #059669"></i>Margem realizada</span>
-            <span><i style="background: #0891b2"></i>Meta da IA</span>
+            <span><i style="background: #059669"></i>Margem média realizada</span>
+            <span><i style="background: #0891b2"></i>Meta recomendada</span>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-head"><h3>Categorias por Giro</h3></div>
-          <div class="hbar-list">
-            <div class="hbar-row">
-              <span class="lbl">Hortifruti</span>
-              <div class="hbar-track">
-                <div class="hbar-fill" style="width: 88%; background: #059669"></div>
-              </div>
-              <span class="val">88%</span>
-            </div>
-            <div class="hbar-row">
-              <span class="lbl">Laticínios</span>
-              <div class="hbar-track">
-                <div class="hbar-fill" style="width: 72%; background: #0891b2"></div>
-              </div>
-              <span class="val">72%</span>
-            </div>
-            <div class="hbar-row">
-              <span class="lbl">Padaria</span>
-              <div class="hbar-track">
-                <div class="hbar-fill" style="width: 64%; background: #7c3aed"></div>
-              </div>
-              <span class="val">64%</span>
-            </div>
-            <div class="hbar-row">
-              <span class="lbl">Mercearia</span>
-              <div class="hbar-track">
-                <div class="hbar-fill" style="width: 51%; background: #d97706"></div>
-              </div>
-              <span class="val">51%</span>
-            </div>
-            <div class="hbar-row">
-              <span class="lbl">Bebidas</span>
-              <div class="hbar-track">
-                <div class="hbar-fill" style="width: 39%; background: #dc2626"></div>
-              </div>
-              <span class="val">39%</span>
-            </div>
+          <div class="card-head">
+            <h3>Mix de Produtos por Categoria</h3>
+            <span class="tag" id="tagTotalCategorias">0 categorias</span>
+          </div>
+          <div class="hbar-list" id="categoriesList">
+            <!-- Preenchido via dashboard.js com as categorias do Supabase -->
           </div>
         </div>
       </div>
@@ -312,7 +342,7 @@
       <!-- Donut + bar chart + alerts -->
       <div class="lower-grid">
         <div class="card">
-          <div class="card-head"><h3>Meta de Redução de Perdas</h3></div>
+          <div class="card-head"><h3>Validades sob Controle</h3></div>
           <div class="donut-wrap">
             <svg viewBox="0 0 120 120">
               <circle
@@ -324,6 +354,7 @@
                 stroke-width="12"
               />
               <circle
+                id="donutProgress"
                 cx="60"
                 cy="60"
                 r="50"
@@ -332,10 +363,11 @@
                 stroke-width="12"
                 stroke-linecap="round"
                 stroke-dasharray="314"
-                stroke-dashoffset="94"
+                stroke-dashoffset="314"
                 transform="rotate(-90 60 60)"
               />
               <text
+                id="donutPctText"
                 x="60"
                 y="66"
                 text-anchor="middle"
@@ -344,72 +376,29 @@
                 font-size="22"
                 fill="#0f1e18"
               >
-                70%
+                0%
               </text>
             </svg>
-            <div class="donut-caption">
-              70% da meta mensal de redução de perdas por validade já atingida
+            <div class="donut-caption" id="donutCaption">
+              Calculando conformidade das validades do estoque…
             </div>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-head"><h3>Promoções por Categoria</h3></div>
-          <div class="bar-chart">
-            <div class="bar-col">
-              <div class="bar" style="height: 35%; background: #dc2626"></div>
-              <span class="bar-lbl">Bebidas</span>
-            </div>
-            <div class="bar-col">
-              <div class="bar" style="height: 55%; background: #d97706"></div>
-              <span class="bar-lbl">Padaria</span>
-            </div>
-            <div class="bar-col">
-              <div class="bar" style="height: 75%; background: #0891b2"></div>
-              <span class="bar-lbl">Laticínios</span>
-            </div>
-            <div class="bar-col">
-              <div class="bar" style="height: 95%; background: #059669"></div>
-              <span class="bar-lbl">Hortifruti</span>
-            </div>
-            <div class="bar-col">
-              <div class="bar" style="height: 60%; background: #7c3aed"></div>
-              <span class="bar-lbl">Mercearia</span>
-            </div>
+          <div class="card-head"><h3>Itens por Categoria</h3></div>
+          <div class="bar-chart" id="barChartCategories">
+            <!-- Colunas dinâmicas geradas a partir do banco -->
           </div>
         </div>
 
         <div class="card">
-          <div class="card-head"><h3>Alertas Recentes</h3></div>
-          <div class="alert-list">
-            <div class="alert-item">
-              <span class="alert-dot" style="background: #d97706"></span>
-              <div>
-                <p>Iogurte Grego 100g vence em 4 dias — desconto de 30% sugerido pela IA.</p>
-                <span>há 12 min</span>
-              </div>
-            </div>
-            <div class="alert-item">
-              <span class="alert-dot" style="background: #dc2626"></span>
-              <div>
-                <p>Feijão Preto 1kg com estoque crítico (5 unidades restantes).</p>
-                <span>há 40 min</span>
-              </div>
-            </div>
-            <div class="alert-item">
-              <span class="alert-dot" style="background: #059669"></span>
-              <div>
-                <p>Margem do Óleo de Soja corrigida automaticamente (+5%).</p>
-                <span>há 1 h</span>
-              </div>
-            </div>
-            <div class="alert-item">
-              <span class="alert-dot" style="background: #0891b2"></span>
-              <div>
-                <p>Novo relatório executivo de rentabilidade disponível para exportação.</p>
-                <span>há 3 h</span>
-              </div>
-            </div>
+          <div class="card-head">
+            <h3>Alertas Recentes</h3>
+            <span class="tag" id="tagAlertasCount">Supabase</span>
+          </div>
+          <div class="alert-list" id="alertsList">
+            <!-- Alertas da tabela alerts renderizados dinamicamente -->
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import globals from "globals";
 
 export default [
   {
-    files: ["landing/**/*.js", "painel/**/*.js"],
+    files: ["landing/**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "script",
