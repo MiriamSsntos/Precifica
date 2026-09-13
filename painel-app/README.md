@@ -5,11 +5,12 @@ App do painel em React + Vite + TypeScript, 100% Supabase (sem backend próprio)
 ## Rodando local
 
 ```powershell
-cd painel
+cd painel-app
 npm install
 ```
 
-Copie `.env.example` para `.env` e preencha com as credenciais do Supabase:
+Copie `.env.example` para `.env` e preencha com as credenciais do Supabase
+(o `.env` fica em `painel-app/`):
 
 ```powershell
 Copy-Item .env.example .env

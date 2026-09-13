@@ -10,7 +10,7 @@ Monorepo com duas aplicações e Supabase:
 
 ```
 landing/   → precifica-rouge.vercel.app          (HTML/CSS/JS puro, foco SEO)
-painel/    → precifica-rouge.vercel.app/painel/  (React + Vite + TypeScript)
+painel-app/ → precifica-rouge.vercel.app/painel/  (React + Vite + TypeScript; build gera painel/dist/)
 Supabase   → Auth + PostgreSQL/RLS + Views/RPC (engine v1)
 trello/    → quadro Kanban de status do projeto
 ```
@@ -22,14 +22,14 @@ Decisões tomadas (não reverter sem perguntar):
 - **Backend**: sem backend próprio. O professor aprovou a arquitetura Supabase-only em ago/2026. O painel usa `supabase-js` diretamente.
 - **Banco**: PostgreSQL do Supabase com RLS `auth.uid() = user_id`; a anon key é pública e a proteção real é o JWT + RLS.
 - **Engine v1**: SÓ lógica de estoque (margem, validade, giro, alertas) em Views/RPC SQL no Supabase (`docs/engine.sql`). IA é fase futura — não implementar sem pedir.
-- **Deploy**: projeto único na Vercel; rewrite de `/` para a landing e `/painel/*` para o build React (`painel/dist/`, com fallback SPA para `index.html`). Build no deploy: `npm run build -w precifica-painel` com `outputDirectory: "."` (a raiz é servida — sem isso o deploy falha com "No Output Directory named public"). Env `VITE_*` cadastradas no dashboard da Vercel. Sem Render e sem domínio próprio por enquanto.
+- **Deploy**: projeto único na Vercel; rewrite de `/` para a landing e `/painel/*` para o build React (`painel/dist/`, com fallback SPA para `index.html`). Build no deploy: `npm run build -w precifica-painel` com `outputDirectory: "."` (a raiz é servida — sem isso o deploy falha com "No Output Directory named public"). O fonte React vive em `painel-app/` (fora da rota servida) e o build sai em `painel/dist/` — NUNCA servir o `index.html` fonte em `/painel/` (o estático encobre o rewrite e quebra com 404 em `/src/main.tsx`). Env `VITE_*` cadastradas no dashboard da Vercel. Sem Render e sem domínio próprio por enquanto.
 - **Git**: branches `feat/<fase>` + PR + Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`). NUNCA commitar direto na `main` — **exceção única**: `trello/trello-data.json` atualizado pela UI do quadro (ferramenta interna da equipe, commit `chore:` automático).
 - **Idioma**: pt-BR em produto e documentação. **Custo total: R$ 0.**
 
 ## Estado atual
 
 - `landing/` — publicada e **finalizada** (Fase 2 de SEO aplicada: canonical, og:image, theme-color, OG/Twitter; efeitos removidos, modo eco permanente; `privacidade.html` com `noindex`). Cadastro/login Supabase funcionam. É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público. Não alterar sem motivo — foco atual é o painel.
-- `painel/` — 8 páginas estáticas (login, dashboard, relatorios, config, ajuda + placeholders produtos, validades, promocoes) com auth real via Supabase e `src/js/supabase.js` compartilhado; serão substituídas pelo React (Fase 5), servindo de referência de design. Só os placeholders têm `noindex` por enquanto (pendência Fase 6 para as demais).
+- `painel/` (rota) + `painel-app/` (fonte React) — app React + Vite + TS + Biome: todas as telas migradas (Login, Dashboard, Produtos, Validades, Promoções, Relatórios, Config, Ajuda) + infra UI (Skeleton, Toast, ConfirmDialog, PageLoader). Mockup estático arquivado em `painel-legacy/` (só referência — fora do lint e do deploy). Env via `painel-app/.env` (ver `.env.example`; sem fallback hardcoded — sem env, o app falha alto com mensagem).
 - `docs/schema.sql` e `docs/seed.sql` — aplicados no Supabase; engine SQL entra em `docs/engine.sql` (Fase 4, ainda não criado).
 - `docs/planejamento.md` — arquitetura, schema e fases (LER antes de executar qualquer fase).
 - `docs/git-workflow.md` — fluxo de branches/PR da equipe (passo a passo para o usuário); reforça regras abaixo.
@@ -41,10 +41,10 @@ Decisões tomadas (não reverter sem perguntar):
 
 ## Convenções
 
-- Landing: HTML/CSS/JS vanilla (ES6+), sem npm em runtime. Painel: React + TS via Vite, lint/format com Biome, CSS Modules, cálculos em `src/lib/` (funções puras). Engine: SQL (Views/RPC) no Supabase. O `package.json` na raiz é **dev-only + workspaces** (`painel`); `npm install` na raiz instala tudo.
+- Landing: HTML/CSS/JS vanilla (ES6+), sem npm em runtime. Painel: React + TS via Vite, lint/format com Biome, CSS Modules, cálculos em `src/lib/` (funções puras). Engine: SQL (Views/RPC) no Supabase. O `package.json` na raiz é **dev-only + workspaces** (`painel-app`); `npm install` na raiz instala tudo.
 - Tooling (raiz, dev-only, cobre SÓ a landing): `html-validate` (HTML), `stylelint` (CSS), `eslint` flat (JS vanilla), `prettier` (format) + `scripts/check-json-ld.mjs` e `scripts/check-local-links.mjs`. Ajustes intencionais: `void-style: selfclosing` e `doctype` lowercase (alinhados ao Prettier); `no-inline-style` off (protótipo usa inline intencional, incluindo cores dinâmicas); `no-descending-specificity` off (ruído entre componentes); `no-undef` off e `no-unused-vars` warn no ESLint (scripts clássicos compartilham globals; funções chamadas em handlers inline no HTML geram warnings esperados). `trello/` e `painel-legacy/` ficam fora do lint/format.
 - Design tokens: variáveis CSS `:root`; fontes Plus Jakarta Sans (texto) + Outfit (títulos); `--primary: #059669`.
-- `painel/src/lib/supabase.ts` exige `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `.env` (sem fallback). Isso é intencional: a chave é pública e a proteção real é o JWT + RLS — não "corrija" adicionando fallback nem commitando `.env`. (O mockup antigo em `painel-legacy/` tinha fallback hardcoded — legado, não replicar.)
+- `painel-app/src/lib/supabase.ts` exige `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `.env` (sem fallback). Isso é intencional: a chave é pública e a proteção real é o JWT + RLS — não "corrija" adicionando fallback nem commitando `.env`. (O mockup antigo em `painel-legacy/` tinha fallback hardcoded — legado, não replicar.)
 - Não adicionar comentários ao código, a menos que solicitado.
 - Manter semântica HTML e meta tags da landing (SEO é prioridade #1).
 - Documentação e mensagens em pt-BR.
@@ -53,7 +53,7 @@ Decisões tomadas (não reverter sem perguntar):
 
 - Lint/format/checks (raiz, após `npm install`): `npm run verify` roda tudo da landing (`lint` + `check`). Comandos: `npm run format` / `format:check`, `lint:html`, `lint:css`, `lint:js`, `check:jsonld` (valida JSON-LD embutido), `check:links` (confere `href`/`src` locais da landing).
 - Landing: abrir no navegador (ou `.\dev.ps1`) sem erros no console.
-- Painel (React): `npm run verify -w precifica-painel` (Biome + `tsc` + `vite build`, exige `painel/.env` só em runtime, não no build); dev com `npm run dev -w precifica-painel` (serve em `/painel/`).
+- Painel (React): `npm run verify -w precifica-painel` (Biome + `tsc` + `vite build`, exige `painel-app/.env` só em runtime, não no build); dev com `npm run dev -w precifica-painel` (serve em `/painel/`).
 - Supabase: executar e validar `docs/schema.sql`, `docs/seed.sql` e `docs/engine.sql` no SQL Editor.
 
 ## Regras de trabalho
