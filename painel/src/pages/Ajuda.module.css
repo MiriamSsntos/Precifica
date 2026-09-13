@@ -1,0 +1,273 @@
+/* Central de ajuda (hero, canais, FAQ, recursos). */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cardHead h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tag {
+  font-size: 10.5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--primary-subtle);
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.btnSecondary {
+  padding: 9px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btnSecondary:hover {
+  background: var(--panel-2);
+}
+
+.hero {
+  text-align: center;
+  padding: 44px 24px;
+  border-radius: 20px;
+  margin-bottom: 26px;
+  background: linear-gradient(160deg, #059669 0%, #10b981 45%, #34d399 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 12%);
+  top: -100px;
+  right: -60px;
+}
+
+.hero h1 {
+  position: relative;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.hero p {
+  position: relative;
+  color: rgb(255 255 255 / 90%);
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+
+.search {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: var(--radius-full);
+  padding: 14px 20px;
+  box-shadow: 0 14px 34px rgb(5 150 105 / 28%);
+}
+
+.search svg {
+  width: 17px;
+  height: 17px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.search input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.supportRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.supportCard {
+  text-align: center;
+}
+
+.supportIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--primary-subtle);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.supportIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.supportCard h3 {
+  font-size: 14.5px;
+  margin-bottom: 6px;
+}
+
+.supportCard p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faqItem {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  background: var(--panel-2);
+  border: none;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.faqQuestion:hover {
+  background: #edf5f0;
+}
+
+.faqQuestion svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: var(--text-muted);
+}
+
+.open .faqQuestion svg {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.open .faqAnswer {
+  max-height: 260px;
+}
+
+.faqAnswer p {
+  padding: 4px 18px 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.noResult {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding: 8px 2px;
+}
+
+.resourceRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.resourceCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.resourceIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: rgb(8 145 178 / 10%);
+  color: var(--cyan-ai);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.resourceIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.rName {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.rDesc {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+@media (width <= 1100px) {
+  .supportRow,
+  .resourceRow {
+    grid-template-columns: 1fr;
+  }
+}

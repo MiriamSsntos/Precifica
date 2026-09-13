@@ -3,9 +3,11 @@
  * Busca perfil + catálogo em paralelo e calcula tudo no cliente
  * (funções puras em lib/dashboard.ts).
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { ErrorState } from "../components/ui/Feedback";
+import { Skeleton } from "../components/ui/Skeleton";
 import type { LiveAlert } from "../lib/dashboard";
 import {
   activeCategoryBars,
@@ -88,10 +90,12 @@ export function Dashboard() {
   const { user } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const loadRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     let mounted = true;
     async function load() {
+      setError(null);
       try {
         const [categoriesRes, productsRes, promotionsRes, alertsRes] = await Promise.all([
           supabase.from("categories").select("id, nome, slug").order("nome"),
@@ -117,6 +121,7 @@ export function Dashboard() {
         }
       }
     }
+    loadRef.current = load;
     load();
     return () => {
       mounted = false;
@@ -129,18 +134,69 @@ export function Dashboard() {
   const bars = data ? activeCategoryBars(data.categories, data.products) : [];
   const marginPoints = data ? marginChartPoints(data.categories, data.products) : "";
 
+  if (!data && !error) {
+    return (
+      <>
+        <div className={styles.heading}>
+          <h1>Olá{user ? `, ${user.displayName}` : ""} 👋</h1>
+          <p>Resumo em tempo real do seu estoque, margens e alertas no Supabase.</p>
+        </div>
+        <div className={styles.statRow}>
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className={styles.card}>
+              <Skeleton width="55%" height={12} />
+              <div style={{ height: 10 }} />
+              <Skeleton width="40%" height={26} />
+              <div style={{ height: 10 }} />
+              <Skeleton height={34} />
+            </div>
+          ))}
+        </div>
+        <div className={styles.grid}>
+          <div className={styles.card}>
+            <Skeleton width="45%" height={16} />
+            <div style={{ height: 14 }} />
+            <Skeleton height={200} />
+          </div>
+          <div className={styles.card}>
+            <Skeleton width="55%" height={16} />
+            <div style={{ height: 14 }} />
+            <Skeleton height={60} />
+            <div style={{ height: 10 }} />
+            <Skeleton height={60} />
+          </div>
+        </div>
+        <div className={styles.lowerGrid}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className={styles.card}>
+              <Skeleton width="50%" height={16} />
+              <div style={{ height: 14 }} />
+              <Skeleton height={150} />
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  if (error && !data) {
+    return (
+      <>
+        <div className={styles.heading}>
+          <h1>Olá{user ? `, ${user.displayName}` : ""} 👋</h1>
+          <p>Resumo em tempo real do seu estoque, margens e alertas no Supabase.</p>
+        </div>
+        <ErrorState message={error} onRetry={() => loadRef.current?.()} />
+      </>
+    );
+  }
+
   return (
     <>
       <div className={styles.heading}>
         <h1>Olá{user ? `, ${user.displayName}` : ""} 👋</h1>
         <p>Resumo em tempo real do seu estoque, margens e alertas no Supabase.</p>
       </div>
-
-      {error ? (
-        <div className={`${styles.card} ${styles.errorBanner}`} role="alert">
-          {error}
-        </div>
-      ) : null}
 
       {stats?.empty ? (
         <div className={`${styles.card} ${styles.emptyBanner}`}>
