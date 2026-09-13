@@ -4,7 +4,7 @@
   "private": true,
   "description": "Dev tooling for Precifica+ (lint/format/checks). Landing stays npm-free at runtime.",
   "type": "module",
-  "workspaces": ["painel"],
+  "workspaces": ["painel-app"],
   "scripts": {
     "format": "prettier --write \"landing/**/*.{html,css,js}\"",
     "format:check": "prettier --check \"landing/**/*.{html,css,js}\"",
