@@ -1,0 +1,37 @@
+/**
+ * Precifica+ — Design Tokens Centrais (Landing & Geral)
+ */
+
+:root {
+  /* Cores de Marca */
+  --primary: #059669;
+  --primary-light: #10b981;
+  --primary-dark: #047857;
+  --purple-ai: #059669;
+  --purple-light: #047857;
+  --cyan-ai: #0d9488;
+  --cyan-light: #14b8a6;
+  --neon-green: #10b981;
+  --neon-amber: #f59e0b;
+  --neon-red: #ef4444;
+
+  /* Superfícies e Fundos */
+  --bg-dark: #f8fafc;
+  --bg-card: #fff;
+  --bg-card-solid: #fff;
+  --white: #fff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-soft: #64748b;
+  --border-glow: rgb(5 150 105 / 15%);
+  --border-cyan: #e2e8f0;
+  --border-soft: #e2e8f0;
+
+  /* Tipografia */
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  /* Efeito de Luz Reativa */
+  --amb-c1: 5, 150, 105;
+  --amb-c2: 16, 185, 129;
+}

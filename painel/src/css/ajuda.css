@@ -1,0 +1,228 @@
+/**
+ * Precifica+ — Estilos Específicos da Central de Ajuda
+ */
+
+/* Hero de Ajuda */
+.help-hero {
+  text-align: center;
+  padding: 44px 24px;
+  border-radius: 20px;
+  margin-bottom: 26px;
+  background: linear-gradient(160deg, #059669 0%, #10b981 45%, #34d399 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.help-hero::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 12%);
+  top: -100px;
+  right: -60px;
+}
+
+.help-hero h1 {
+  position: relative;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.help-hero p {
+  position: relative;
+  color: rgb(255 255 255 / 90%);
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+
+.help-search {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: var(--radius-full);
+  padding: 14px 20px;
+  box-shadow: 0 14px 34px rgb(5 150 105 / 28%);
+}
+
+.help-search svg {
+  width: 17px;
+  height: 17px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.help-search input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Cards de Canais de Suporte */
+.support-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.support-card {
+  text-align: center;
+}
+
+.support-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--primary-subtle);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.support-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.support-card h3 {
+  font-size: 14.5px;
+  margin-bottom: 6px;
+}
+
+.support-card p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* FAQs / Acordeão */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  background: var(--panel-2);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  transition: background 0.15s ease;
+}
+
+.faq-question:hover {
+  background: #edf5f0;
+}
+
+.faq-question .chev {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: var(--text-muted);
+}
+
+.faq-item.open .faq-question .chev {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 260px;
+}
+
+.faq-answer p {
+  padding: 4px 18px 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Recursos Adicionais */
+.resource-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.resource-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.resource-card:hover {
+  border-color: rgb(5 150 105 / 30%);
+  transform: translateY(-2px);
+}
+
+.resource-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: rgb(8 145 178 / 10%);
+  color: var(--cyan-ai);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.resource-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.resource-card .r-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.resource-card .r-desc {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+@media (width <= 1100px) {
+  .support-row,
+  .resource-row {
+    grid-template-columns: 1fr;
+  }
+}
