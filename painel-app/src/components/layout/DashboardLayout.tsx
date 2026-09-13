@@ -1,6 +1,7 @@
 /**
  * Precifica+ — Shell do painel: sidebar + topbar + conteúdo (portado do mockup).
  */
+import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { LogoMark } from "../Logo";
@@ -62,6 +63,20 @@ export function DashboardLayout() {
   const { user, signOut } = useAuth();
   const confirm = useConfirm();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   async function handleLogout() {
     const ok = await confirm({
@@ -76,8 +91,16 @@ export function DashboardLayout() {
 
   return (
     <div className={styles.layout}>
-      <aside className={styles.sidebar}>
-        <Link to="/" className={styles.logo}>
+      {menuOpen ? (
+        <button
+          type="button"
+          className={styles.backdrop}
+          aria-label="Fechar menu"
+          onClick={() => setMenuOpen(false)}
+        />
+      ) : null}
+      <aside className={menuOpen ? `${styles.sidebar} ${styles.open}` : styles.sidebar}>
+        <Link to="/" className={styles.logo} onClick={() => setMenuOpen(false)}>
           <LogoMark />
           <span>
             Precifica<em>+</em>
@@ -91,6 +114,7 @@ export function DashboardLayout() {
               key={link.to}
               to={link.to}
               end={link.to === "/"}
+              onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 isActive ? `${styles.link} ${styles.active}` : styles.link
               }
@@ -107,6 +131,7 @@ export function DashboardLayout() {
             <NavLink
               key={link.to}
               to={link.to}
+              onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 isActive ? `${styles.link} ${styles.active}` : styles.link
               }
@@ -126,6 +151,25 @@ export function DashboardLayout() {
 
       <main className={styles.main}>
         <div className={styles.topbar}>
+          <button
+            type="button"
+            className={styles.menuBtn}
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <line x1="4" y1="7" x2="20" y2="7" strokeLinecap="round" />
+              <line x1="4" y1="12" x2="20" y2="12" strokeLinecap="round" />
+              <line x1="4" y1="17" x2="20" y2="17" strokeLinecap="round" />
+            </svg>
+          </button>
           <div className={styles.searchBox}>
             <svg
               viewBox="0 0 24 24"
