@@ -28,7 +28,7 @@ Decisões tomadas (não reverter sem perguntar):
 
 ## Estado atual
 
-- `landing/` — publicada; cadastro/login Supabase funcionam. Faltam canonical, og:image, theme-color e validações SEO (Fase 2). É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público.
+- `landing/` — publicada e **finalizada** (Fase 2 de SEO aplicada: canonical, og:image, theme-color, OG/Twitter; efeitos removidos, modo eco permanente; `privacidade.html` com `noindex`). Cadastro/login Supabase funcionam. É HTML puro, mas já carrega `@supabase/supabase-js` via CDN (única dependência externa) para o cadastro público. Não alterar sem motivo — foco atual é o painel.
 - `painel/` — 8 páginas estáticas (login, dashboard, relatorios, config, ajuda + placeholders produtos, validades, promocoes) com auth real via Supabase e `src/js/supabase.js` compartilhado; serão substituídas pelo React (Fase 5), servindo de referência de design. Só os placeholders têm `noindex` por enquanto (pendência Fase 6 para as demais).
 - `docs/schema.sql` e `docs/seed.sql` — aplicados no Supabase; engine SQL entra em `docs/engine.sql` (Fase 4, ainda não criado).
 - `docs/planejamento.md` — arquitetura, schema e fases (LER antes de executar qualquer fase).

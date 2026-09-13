@@ -96,6 +96,10 @@ body {
   font-size: 16px;
   color: var(--text-main);
   background: var(--bg-dark);
+  background-image:
+    radial-gradient(circle 700px at 12% 6%, rgb(5 150 105 / 7%), transparent 70%),
+    radial-gradient(circle 600px at 88% 92%, rgb(5 150 105 / 5%), transparent 70%);
+  background-attachment: fixed;
   line-height: 1.6;
   overflow: hidden auto;
   width: 100%;
@@ -108,167 +112,18 @@ section {
   z-index: 1;
 }
 
-/* ─── FUNDO TECNOLÓGICO & AMBIENTE REATIVO ─── */
-.bg-grid-tech {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image: radial-gradient(rgb(5 150 105 / 9%) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-.bg-ambient-glow {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(
-      circle 650px at 15% 10%,
-      rgba(var(--amb-c1, 5, 150, 105), 0.1),
-      transparent 70%
-    ),
-    radial-gradient(
-      circle 550px at 85% 85%,
-      rgba(var(--amb-c2, 16, 185, 129), 0.08),
-      transparent 70%
-    );
-  transition: background 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ─── CANVAS GRID & DOTS FLUTUANTES ─── */
-#cyber-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* ─── SISTEMA DE AMBIENTE REATIVO ─── */
-#ambient-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.parallax-glow {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(100px);
-  will-change: transform, background-color;
-  transition: background-color 1.5s ease;
-}
-
-#pg1 {
-  width: 700px;
-  height: 700px;
-  top: -10%;
-  left: -10%;
-  opacity: 0.12;
-  background-color: #047857;
-}
-
-#pg2 {
-  width: 550px;
-  height: 550px;
-  bottom: -10%;
-  right: -10%;
-  opacity: 0.1;
-  background-color: #065f46;
-}
-
-#pg3 {
-  width: 450px;
-  height: 450px;
-  top: 30%;
-  left: 40%;
-  opacity: 0.08;
-  background-color: #10b981;
-}
-
-#scan-line {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 1.5px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgb(16 185 129 / 80%),
-    rgb(52 211 153 / 90%),
-    transparent
-  );
-  box-shadow: 0 0 12px rgb(16 185 129 / 70%);
+/* Acessibilidade: foco visível por teclado */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* ════════════════════════════════════════════════════════════
-         SISTEMA DE MODOS: ⚡ EFEITOS COMPLETOS vs 🍃 ECONOMIA (ECO)
-         ════════════════════════════════════════════════════════════ */
-
-/* ─── MODO EFEITOS (Padrão de Alto Impacto Visual) ─── */
-html:not([data-perf-mode="eco"]) #cyber-canvas,
-html:not([data-perf-mode="eco"]) #ambient-layer,
-html:not([data-perf-mode="eco"]) .parallax-glow,
-html:not([data-perf-mode="eco"]) #scan-line,
-html:not([data-perf-mode="eco"]) .bg-ambient-glow {
-  display: block;
-}
-
-html:not([data-perf-mode="eco"]) .hero-floating-card-1 {
-  animation: float 6s ease-in-out infinite;
-}
-
-html:not([data-perf-mode="eco"]) .hero-floating-card-2 {
-  animation: float-b 7s ease-in-out infinite;
-}
-
-html:not([data-perf-mode="eco"]) .hero-glow-1,
-html:not([data-perf-mode="eco"]) .hero-glow-2 {
-  animation: glow-pulse 8s ease-in-out infinite alternate;
-}
-
-html:not([data-perf-mode="eco"]) .hero-badge-dot {
-  animation: pulse-dot 2.5s infinite;
-}
-
-html:not([data-perf-mode="eco"]) .feat-card,
-html:not([data-perf-mode="eco"]) .testi-card,
-html:not([data-perf-mode="eco"]) .plan {
-  position: relative;
-  overflow: hidden;
-}
-
-html:not([data-perf-mode="eco"]) .feat-card::before,
-html:not([data-perf-mode="eco"]) .testi-card::before,
-html:not([data-perf-mode="eco"]) .plan::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    380px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
-    rgb(5 150 105 / 9%),
-    transparent 60%
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-html:not([data-perf-mode="eco"]) .feat-card:hover::before,
-html:not([data-perf-mode="eco"]) .testi-card:hover::before,
-html:not([data-perf-mode="eco"]) .plan:hover::before {
-  opacity: 1;
-}
+   MODO ECO PERMANENTE — página leve, sem efeitos animados
+   ════════════════════════════════════════════════════════════ */
 
 /* ─── MODO ECONOMIA (Zero GPU/CPU Overhead / 120 FPS Fixos) ─── */
 html[data-perf-mode="eco"] #cyber-canvas,
@@ -337,120 +192,6 @@ html[data-perf-mode="eco"] .reveal-fade {
   transition: none !important;
 }
 
-/* ─── BOTÃO TOGGLE DE DESEMPENHO NA NAVBAR ─── */
-.perf-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgb(255 255 255 / 14%);
-  border: 1px solid rgb(255 255 255 / 25%);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12.5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
-  letter-spacing: 0.01em;
-}
-
-.perf-toggle-btn:hover {
-  background: rgb(255 255 255 / 22%);
-  border-color: rgb(255 255 255 / 45%);
-  transform: translateY(-1px);
-}
-
-.perf-toggle-btn .perf-icon-fx,
-.perf-toggle-btn .perf-icon-eco {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-/* Estado Efeitos */
-html:not([data-perf-mode="eco"]) .perf-toggle-btn .perf-icon-eco {
-  display: none;
-}
-
-html:not([data-perf-mode="eco"]) .perf-toggle-btn {
-  background: rgb(255 255 255 / 18%);
-  border-color: rgb(255 255 255 / 35%);
-  box-shadow: 0 0 12px rgb(255 255 255 / 15%);
-}
-
-/* Estado Economia */
-html[data-perf-mode="eco"] .perf-toggle-btn .perf-icon-fx {
-  display: none;
-}
-
-html[data-perf-mode="eco"] .perf-toggle-btn {
-  background: rgb(255 255 255 / 15%);
-  border-color: rgb(255 255 255 / 30%);
-  color: #e2e8f0;
-}
-
-/* Mobile Toggle */
-.perf-toggle-btn-mobile {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  background: rgb(255 255 255 / 8%);
-  border: 1px solid rgb(255 255 255 / 15%);
-  border-radius: 10px;
-  padding: 10px 14px;
-  color: #fff;
-  font-size: 13.5px;
-  font-weight: 600;
-  cursor: pointer;
-  margin: 6px 0;
-}
-
-.perf-mobile-label {
-  color: rgb(255 255 255 / 80%);
-}
-
-.perf-mobile-status {
-  color: #fff;
-  font-weight: 700;
-}
-
-/* Toast de feedback de modo */
-.perf-toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(60px);
-  background: #0f172a;
-  color: #fff;
-  border: 1px solid rgb(255 255 255 / 18%);
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 40%);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.28s ease;
-  z-index: 9999;
-}
-
-.perf-toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
-/* Efeito sutil ao focar na seção */
-.section-flash {
-  transition: background-color 0.6s ease;
-}
-
 /* ─── ANIMAÇÕES ─── */
 @keyframes fade-up {
   from {
@@ -471,60 +212,6 @@ html[data-perf-mode="eco"] .perf-toggle-btn {
 
   to {
     opacity: 1;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@keyframes float-b {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes glow-pulse {
-  0%,
-  100% {
-    opacity: 0.12;
-  }
-
-  50% {
-    opacity: 0.22;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(200%);
-  }
-}
-
-@keyframes pulse-dot {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgb(200 226 168 / 60%);
-  }
-
-  50% {
-    box-shadow: 0 0 0 6px rgb(200 226 168 / 0%);
   }
 }
 
@@ -1018,14 +705,6 @@ nav {
     0 1px 3px rgb(0 0 0 / 4%);
 }
 
-.hero-card:first-child {
-  animation: float 4s ease-in-out infinite;
-}
-
-.hero-card:last-child {
-  animation: float-b 4s ease-in-out infinite 0.6s;
-}
-
 .hero-card:hover {
   border-color: rgb(5 150 105 / 30%);
   box-shadow:
@@ -1205,13 +884,13 @@ section {
 
 /* ─── FEATURES ─── */
 .features-bg {
-  background: linear-gradient(180deg, #f0fdf4, #fff 70%);
-  border-top: 1px solid #d1fae5;
-  border-bottom: 1px solid #d1fae5;
+  background: linear-gradient(180deg, rgb(240 253 244 / 45%), rgb(255 255 255 / 15%) 70%);
+  border-top: 1px solid rgb(209 250 229 / 60%);
+  border-bottom: 1px solid rgb(209 250 229 / 60%);
 }
 
 .pricing-bg {
-  background: linear-gradient(180deg, #fff, #f0fdf4 100%);
+  background: linear-gradient(180deg, rgb(255 255 255 / 15%), rgb(240 253 244 / 45%) 100%);
   border-top: 1px solid var(--border-soft);
 }
 
@@ -1505,12 +1184,14 @@ section {
 }
 
 .plan.featured {
-  border-color: rgb(5 150 105 / 50%);
-  box-shadow: 0 8px 30px rgb(5 150 105 / 10%);
+  border-color: rgb(5 150 105 / 55%);
+  box-shadow: 0 8px 30px rgb(5 150 105 / 14%);
+  overflow: visible !important;
+  z-index: 5;
 }
 
 .plan.featured:hover {
-  box-shadow: 0 12px 40px rgb(5 150 105 / 18%);
+  box-shadow: 0 12px 40px rgb(5 150 105 / 22%);
 }
 
 .plan-badge {
@@ -1527,6 +1208,8 @@ section {
   white-space: nowrap;
   letter-spacing: 0.07em;
   font-family: var(--font-display);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgb(5 150 105 / 30%);
 }
 
 .plan-name {
@@ -2051,6 +1734,10 @@ footer {
   color: white;
 }
 
+.footer-academic {
+  color: rgb(255 255 255 / 45%);
+}
+
 /* ─── GLOW MOUSE ─── */
 .feat-card,
 .plan,
@@ -2146,18 +1833,6 @@ footer {
 
   .hero-stats {
     gap: 28px;
-  }
-
-  .countdown-wrap {
-    margin-top: 20px;
-  }
-
-  .countdown {
-    gap: 10px;
-  }
-
-  .countdown-unit span {
-    font-size: 20px;
   }
 
   .footer-links {
@@ -2292,15 +1967,6 @@ footer {
     border-radius: 18px;
   }
 
-  .countdown-unit {
-    min-width: 50px;
-    padding: 8px 12px;
-  }
-
-  .countdown-unit span {
-    font-size: 18px;
-  }
-
   .faq-q {
     font-size: 14px;
     padding: 18px 0;
@@ -2413,53 +2079,7 @@ footer {
   animation: spin 0.6s linear infinite;
 }
 
-/* ─── COUNTDOWN ─── */
-.countdown-wrap {
-  text-align: center;
-  margin-top: 36px;
-}
-
-.countdown-label {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--neon-amber);
-  margin-bottom: 12px;
-  letter-spacing: 0.03em;
-}
-
-.countdown {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-}
-
-.countdown-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgb(5 150 105 / 6%);
-  border: 1px solid rgb(5 150 105 / 15%);
-  border-radius: 10px;
-  padding: 10px 16px;
-  min-width: 60px;
-}
-
-.countdown-unit span {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 800;
-  color: #059669;
-  line-height: 1;
-}
-
-.countdown-unit small {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
-  margin-top: 4px;
-}
-
+/* ─── SPINNER ─── */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -2976,17 +2596,5 @@ footer {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  #cyber-canvas {
-    display: none;
-  }
-
-  .parallax-glow {
-    display: none;
-  }
-
-  #scan-line {
-    display: none;
   }
 }
