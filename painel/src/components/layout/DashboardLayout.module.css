@@ -1,0 +1,264 @@
+/* Shell do painel: sidebar + topbar (portado do mockup estático). */
+
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.main {
+  padding: 28px 36px 60px;
+  min-width: 0;
+}
+
+.sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  padding: 0 6px;
+  text-decoration: none;
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.logo span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.logo span em {
+  color: var(--primary);
+  font-style: normal;
+}
+
+.sectionLabel {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  padding: 0 12px;
+  margin: 18px 0 10px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.link svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.link:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.active {
+  background: linear-gradient(90deg, rgb(5 150 105 / 12%), rgb(8 145 178 / 5%));
+  color: var(--primary);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.upgrade {
+  margin-top: auto;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 16px;
+  background: linear-gradient(160deg, #ecfdf5, #f4f8f6);
+}
+
+.upgrade h4 {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.upgrade p {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.upgrade button {
+  width: 100%;
+  border: none;
+  padding: 9px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--cyan-ai), var(--primary));
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.upgrade button:hover {
+  opacity: 0.95;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.searchBox {
+  flex: 1;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 11px 18px;
+}
+
+.searchBox svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.searchBox input {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13.5px;
+  width: 100%;
+}
+
+.searchBox input::placeholder {
+  color: var(--text-dim);
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.iconBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.iconBtn:hover {
+  background: #eaf3ee;
+}
+
+.iconBtn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--neon-amber);
+}
+
+.userChip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  text-align: left;
+  color: inherit;
+  padding: 0;
+}
+
+.userAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan-ai), var(--purple-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.name {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.role {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+@media (width <= 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}
