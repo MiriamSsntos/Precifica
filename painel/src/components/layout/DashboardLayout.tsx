@@ -4,6 +4,7 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { LogoMark } from "../Logo";
+import { useConfirm } from "../ui/ConfirmDialog";
 import styles from "./DashboardLayout.module.css";
 
 function NavIcon({ d, circle = false }: { d: string; circle?: boolean }) {
@@ -59,13 +60,18 @@ const ACCOUNT_LINKS: SidebarLink[] = [
 
 export function DashboardLayout() {
   const { user, signOut } = useAuth();
+  const confirm = useConfirm();
   const navigate = useNavigate();
 
   async function handleLogout() {
-    if (window.confirm("Deseja sair da sua conta?")) {
-      await signOut();
-      navigate("/login");
-    }
+    const ok = await confirm({
+      title: "Sair da conta",
+      message: "Deseja sair da sua conta neste dispositivo?",
+      confirmLabel: "Sair",
+    });
+    if (!ok) return;
+    await signOut();
+    navigate("/login");
   }
 
   return (

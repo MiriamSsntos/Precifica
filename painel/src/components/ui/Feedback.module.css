@@ -1,0 +1,74 @@
+/* Estados vazios e de erro. */
+
+.empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+}
+
+.empty svg {
+  width: 44px;
+  height: 44px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.empty h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.empty p {
+  font-size: 12.5px;
+  margin-bottom: 16px;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.error svg {
+  width: 30px;
+  height: 30px;
+  color: var(--danger);
+  flex-shrink: 0;
+}
+
+.error h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #b91c1c;
+  margin-bottom: 2px;
+}
+
+.error p {
+  font-size: 12.5px;
+  color: #b91c1c;
+}
+
+.retry {
+  margin-left: auto;
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--danger);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.retry:hover {
+  background: #b91c1c;
+}

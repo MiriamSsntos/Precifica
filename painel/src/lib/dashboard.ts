@@ -198,7 +198,6 @@ export function buildAlerts(products: Product[], dbAlerts: AlertRow[], limit = 6
   const live: LiveAlert[] = [];
 
   for (const p of products) {
-    const unidade = p.unidade || "un";
     const estoque = Number.parseInt(String(p.estoque_atual), 10) || 0;
     const estMin = Number.parseInt(String(p.estoque_min), 10) || 5;
     const nome = p.nome || "Produto sem nome";
@@ -211,14 +210,14 @@ export function buildAlerts(products: Product[], dbAlerts: AlertRow[], limit = 6
         live.push({
           tipo: "validade_critica",
           priority: 1,
-          mensagem: `${nome} venceu ${abs === 1 ? "ontem" : `há ${abs} dias`} (${dataFormatada}) — ${estoque} ${unidade} no estoque. Ação imediata requerida.`,
+          mensagem: `${nome} venceu ${abs === 1 ? "ontem" : `há ${abs} dias`} (${dataFormatada}) — ${estoque} un no estoque. Ação imediata requerida.`,
           timeStr: "Hoje (tempo real)",
         });
       } else if (diff === 0) {
         live.push({
           tipo: "validade_critica",
           priority: 2,
-          mensagem: `${nome} vence hoje (${dataFormatada}) — ${estoque} ${unidade} restantes. Sugestão de remarcação/promoção imediata.`,
+          mensagem: `${nome} vence hoje (${dataFormatada}) — ${estoque} un restantes. Sugestão de remarcação/promoção imediata.`,
           timeStr: "Hoje (tempo real)",
         });
       } else if (diff <= 3) {

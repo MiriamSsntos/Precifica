@@ -10,6 +10,116 @@
       content="Painel Precifica+ — gestão de estoque e precificação com IA."
     />
     <title>Painel — Precifica+</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f4f8f6;
+      }
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        background: #f4f8f6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      }
+      #boot-splash .logo {
+        width: 68px;
+        height: 68px;
+        border-radius: 20px;
+        background: linear-gradient(150deg, #059669 0%, #10b981 60%, #34d399 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 16px 36px rgb(5 150 105 / 30%);
+      }
+      #boot-splash .logo svg {
+        width: 38px;
+        height: 38px;
+      }
+      #boot-splash .name {
+        font-family: Outfit, system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        color: #0f1e18;
+      }
+      #boot-splash .name span {
+        color: #059669;
+      }
+      #boot-splash .spinner {
+        width: 30px;
+        height: 30px;
+        margin-top: 6px;
+        border-radius: 50%;
+        border: 3px solid rgb(5 150 105 / 18%);
+        border-top-color: #059669;
+        animation: boot-spin 0.8s linear infinite;
+      }
+      #boot-splash p {
+        font-size: 13px;
+        color: #5b6b64;
+        margin: 0;
+      }
+      #boot-splash .boot-error {
+        max-width: 440px;
+        background: #fff;
+        border: 1px solid #fecaca;
+        border-radius: 16px;
+        padding: 24px 26px;
+        text-align: center;
+        box-shadow: 0 16px 36px rgb(15 23 20 / 12%);
+      }
+      #boot-splash .boot-error strong {
+        display: block;
+        font-family: Outfit, system-ui, sans-serif;
+        font-size: 17px;
+        color: #b91c1c;
+        margin-bottom: 8px;
+      }
+      #boot-splash .boot-error p {
+        font-size: 13px;
+        color: #5b6b64;
+        margin: 0 0 6px;
+      }
+      #boot-splash .boot-error .hint {
+        font-size: 12px;
+        color: #98a49e;
+      }
+      @keyframes boot-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      window.__bootErrors = [];
+      window.addEventListener("error", function (e) {
+        if (e && e.message) window.__bootErrors.push(String(e.message));
+      });
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          var splash = document.getElementById("boot-splash");
+          if (!splash || window.__bootErrors.length === 0) return;
+          splash.innerHTML = "";
+          var card = document.createElement("div");
+          card.className = "boot-error";
+          var title = document.createElement("strong");
+          title.textContent = "Não foi possível iniciar o painel";
+          var msg = document.createElement("p");
+          msg.textContent = window.__bootErrors[0];
+          var hint = document.createElement("p");
+          hint.className = "hint";
+          hint.textContent = "Verifique a configuração e recarregue a página.";
+          card.appendChild(title);
+          card.appendChild(msg);
+          card.appendChild(hint);
+          splash.appendChild(card);
+        }, 2500);
+      });
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,7 +128,30 @@
     />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="boot-splash" aria-label="Carregando painel">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M 120 230 L 100 230 A 30 30 0 0 1 70 200 L 70 100 A 30 30 0 0 1 100 70 L 140 70 A 55 55 0 0 1 195 125 A 55 55 0 0 1 140 180 L 100 180 A 20 20 0 0 0 80 200"
+              stroke="#ffffff"
+              stroke-width="42"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M 235 60 L 235 110 M 210 85 L 260 85"
+              stroke="#ffffff"
+              stroke-width="22"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <div class="name" aria-hidden="true">Precifica<span>+</span></div>
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Carregando seu painel…</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

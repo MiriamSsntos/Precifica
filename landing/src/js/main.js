@@ -627,7 +627,7 @@ async function submitForm() {
     document.getElementById("form-area").style.display = "none";
     document.getElementById("success-msg").style.display = "block";
     setTimeout(() => {
-      window.location.href = "../painel/dashboard.html";
+      window.location.href = "../painel/";
     }, 1400);
   } catch {
     if (errForm) {
@@ -796,7 +796,7 @@ async function handleLogin() {
     }
 
     if (data && data.session) {
-      window.location.href = "../painel/dashboard.html";
+      window.location.href = "../painel/";
     }
   } catch (err) {
     console.error("Erro no login:", err);

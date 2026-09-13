@@ -1,14 +1,18 @@
 /**
  * Precifica+ — Rotas do painel (SPA sob /painel/).
- * Telas privadas passam por <RequireAuth>; o resto é placeholder
- * até a migração do mockup (ver Placeholder).
+ * Telas privadas passam por <RequireAuth>.
  */
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RequireAuth } from "./auth/AuthContext";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
+import { Ajuda } from "./pages/Ajuda";
+import { Config } from "./pages/Config";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
-import { Placeholder } from "./pages/Placeholder";
+import { Produtos } from "./pages/Produtos";
+import { Promocoes } from "./pages/Promocoes";
+import { Relatorios } from "./pages/Relatorios";
+import { Validades } from "./pages/Validades";
 
 export function App() {
   return (
@@ -23,29 +27,12 @@ export function App() {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route
-            path="produtos"
-            element={
-              <Placeholder title="Produtos" hint="Catálogo, estoque e precificação por SKU." />
-            }
-          />
-          <Route
-            path="validades"
-            element={<Placeholder title="Validades" hint="Linha do tempo de lotes críticos." />}
-          />
-          <Route
-            path="promocoes"
-            element={<Placeholder title="Promoções IA" hint="Ofertas geradas pela inteligência." />}
-          />
-          <Route
-            path="relatorios"
-            element={<Placeholder title="Relatórios" hint="Rentabilidade e movimentações." />}
-          />
-          <Route
-            path="config"
-            element={<Placeholder title="Configurações" hint="Conta, loja e integrações." />}
-          />
-          <Route path="ajuda" element={<Placeholder title="Ajuda" hint="Suporte e dúvidas." />} />
+          <Route path="produtos" element={<Produtos />} />
+          <Route path="validades" element={<Validades />} />
+          <Route path="promocoes" element={<Promocoes />} />
+          <Route path="relatorios" element={<Relatorios />} />
+          <Route path="config" element={<Config />} />
+          <Route path="ajuda" element={<Ajuda />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
