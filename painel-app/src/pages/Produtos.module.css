@@ -443,6 +443,66 @@
   margin-bottom: 6px;
 }
 
+.fieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.fieldHeader label {
+  margin-bottom: 0;
+}
+
+.btnInlineAction {
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.btnInlineAction:hover {
+  background: var(--primary-subtle);
+}
+
+.newCatRow {
+  display: flex;
+  gap: 8px;
+}
+
+.newCatRow input {
+  flex: 1;
+}
+
+.btnSaveInline {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.btnSaveInline:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.btnSaveInline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .field input,
 .field select {
   width: 100%;

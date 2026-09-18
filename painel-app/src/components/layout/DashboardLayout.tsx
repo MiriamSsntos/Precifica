@@ -1,10 +1,13 @@
 /**
- * Precifica+ — Shell do painel: sidebar + topbar + conteúdo (portado do mockup).
+ * Precifica+ — Shell do painel: sidebar + topbar + notificações globais + busca + modal de produtos.
  */
-import { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import { AlarmProvider, useAlarm } from "../../context/AlarmContext";
 import { LogoMark } from "../Logo";
+import { ProductModal } from "../products/ProductModal";
 import { useConfirm } from "../ui/ConfirmDialog";
 import styles from "./DashboardLayout.module.css";
 
@@ -60,10 +63,25 @@ const ACCOUNT_LINKS: SidebarLink[] = [
 ];
 
 export function DashboardLayout() {
+  return (
+    <AlarmProvider>
+      <DashboardLayoutContent />
+    </AlarmProvider>
+  );
+}
+
+function DashboardLayoutContent() {
   const { user, signOut } = useAuth();
   const confirm = useConfirm();
   const navigate = useNavigate();
+  const { alarmedItems, vencidosCount, expiringCount, openProductModal } = useAlarm();
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  const totalAlerts = vencidosCount + expiringCount;
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -78,7 +96,18 @@ export function DashboardLayout() {
     };
   }, [menuOpen]);
 
-  async function handleLogout() {
+  useEffect(() => {
+    if (!notifOpen) return;
+    function onDocClick(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [notifOpen]);
+
+  const handleLogout = async () => {
     const ok = await confirm({
       title: "Sair da conta",
       message: "Deseja sair da sua conta neste dispositivo?",
@@ -87,7 +116,17 @@ export function DashboardLayout() {
     if (!ok) return;
     await signOut();
     navigate("/login");
-  }
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) {
+      navigate(`/produtos?busca=${encodeURIComponent(q)}`);
+    } else {
+      navigate("/produtos");
+    }
+  };
 
   return (
     <div className={styles.layout}>
@@ -170,22 +209,9 @@ export function DashboardLayout() {
               <line x1="4" y1="17" x2="20" y2="17" strokeLinecap="round" />
             </svg>
           </button>
-          <div className={styles.searchBox}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path strokeLinecap="round" d="m20 20-3.5-3.5" />
-            </svg>
-            <input type="text" placeholder="Buscar produtos, promoções…" aria-label="Buscar" />
-          </div>
-          <div className={styles.topbarRight}>
-            <button type="button" className={styles.iconBtn} aria-label="Notificações">
-              <span className={styles.dot} />
+
+          <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+            <div className={styles.searchBox}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -193,14 +219,108 @@ export function DashboardLayout() {
                 strokeWidth="2"
                 aria-hidden="true"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"
-                />
-                <path strokeLinecap="round" d="M13.7 21a2 2 0 0 1-3.4 0" />
+                <circle cx="11" cy="11" r="7" />
+                <path strokeLinecap="round" d="m20 20-3.5-3.5" />
               </svg>
+              <input
+                type="text"
+                placeholder="Buscar produtos por nome ou código…"
+                aria-label="Buscar produtos"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </form>
+
+          <div className={styles.topbarRight}>
+            {/* Sino de Notificações e Alarme */}
+            <div ref={notifRef} className={styles.notifWrap}>
+              <button
+                type="button"
+                className={`${styles.iconBtn} ${totalAlerts > 0 ? styles.ringing : ""}`}
+                aria-label="Notificações de validade"
+                title="Notificações e alertas de vencimento"
+                onClick={() => setNotifOpen((v) => !v)}
+              >
+                {totalAlerts > 0 && <span className={styles.badge}>{totalAlerts}</span>}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"
+                  />
+                  <path strokeLinecap="round" d="M13.7 21a2 2 0 0 1-3.4 0" />
+                </svg>
+              </button>
+
+              {notifOpen && (
+                <div className={styles.notifDropdown}>
+                  <div className={styles.notifHeader}>
+                    <span>Alertas de Vencimento</span>
+                    {totalAlerts > 0 && (
+                      <span className={styles.notifPill}>{totalAlerts} críticos</span>
+                    )}
+                  </div>
+                  <div className={styles.notifList}>
+                    {alarmedItems.length === 0 ? (
+                      <div className={styles.notifEmpty}>
+                        Nenhum produto em risco de validade no momento. Tudo em dia! ✅
+                      </div>
+                    ) : (
+                      alarmedItems.slice(0, 6).map((item) => (
+                        <Link
+                          key={item.product.id}
+                          to="/validades"
+                          className={`${styles.notifItem} ${item.vencido ? styles.notifItemVencido : ""}`}
+                          onClick={() => setNotifOpen(false)}
+                        >
+                          <span className={styles.notifItemTitle}>{item.product.nome}</span>
+                          <span className={styles.notifItemDesc}>
+                            {item.vencido
+                              ? `Venceu há ${Math.abs(item.days)} dia(s)`
+                              : `Vence em ${item.days} dia(s)`}
+                          </span>
+                        </Link>
+                      ))
+                    )}
+                  </div>
+                  <Link
+                    to="/validades"
+                    className={styles.notifFooter}
+                    onClick={() => setNotifOpen(false)}
+                  >
+                    Ver todos no Painel de Validades →
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Botão Global de Cadastrar Produto */}
+            <button
+              type="button"
+              className={styles.btnNewProduct}
+              onClick={() => openProductModal()}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                aria-hidden="true"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Cadastrar produto
             </button>
+
+            {/* Perfil do Usuário */}
             <button
               type="button"
               className={styles.userChip}
@@ -217,6 +337,29 @@ export function DashboardLayout() {
         </div>
 
         <Outlet />
+
+        {/* Botão Flutuante FAB para Acesso Rápido Global */}
+        <button
+          type="button"
+          className={styles.fabBtn}
+          onClick={() => openProductModal()}
+          title="Cadastrar novo produto"
+          aria-label="Cadastrar novo produto"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            aria-hidden="true"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+
+        {/* Modal Global Canônico */}
+        <ProductModal />
       </main>
     </div>
   );

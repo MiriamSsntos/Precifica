@@ -18,8 +18,16 @@ export type Profile = {
 
 export type Category = {
   id: string;
+  user_id?: string;
   nome: string;
   slug: string | null;
+};
+
+export type CategoryInsert = {
+  id?: string;
+  user_id?: string;
+  nome: string;
+  slug?: string | null;
 };
 
 export type Product = {
@@ -96,8 +104,8 @@ interface Database {
       };
       categories: {
         Row: Category;
-        Insert: Partial<Category>;
-        Update: Partial<Category>;
+        Insert: CategoryInsert;
+        Update: Partial<CategoryInsert>;
         Relationships: [];
       };
       products: {
