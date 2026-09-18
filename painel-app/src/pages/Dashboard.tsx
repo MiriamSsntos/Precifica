@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { ErrorState } from "../components/ui/Feedback";
 import { Skeleton } from "../components/ui/Skeleton";
+import { ensureDefaultCategories } from "../lib/categories";
 import type { LiveAlert } from "../lib/dashboard";
 import {
   activeCategoryBars,
@@ -108,8 +109,16 @@ export function Dashboard() {
           categoriesRes.error ?? productsRes.error ?? promotionsRes.error ?? alertsRes.error;
         if (err) throw err;
         const products = (productsRes.data ?? []) as Product[];
+        let categories = (categoriesRes.data ?? []) as Category[];
+        if (categories.length === 0 && user?.id) {
+          try {
+            categories = await ensureDefaultCategories(user.id);
+          } catch (catErr) {
+            console.warn("Não foi possível provisionar categorias padrão no Dashboard:", catErr);
+          }
+        }
         setData({
-          categories: (categoriesRes.data ?? []) as Category[],
+          categories,
           products,
           promotions: (promotionsRes.data ?? []) as Promotion[],
           alerts: buildAlerts(products, (alertsRes.data ?? []) as AlertRow[]),
@@ -126,7 +135,7 @@ export function Dashboard() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [user?.id]);
 
   const stats = data ? computeStatCards(data.products, data.promotions) : null;
   const validity = data ? computeValidity(data.products) : null;

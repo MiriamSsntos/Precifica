@@ -154,6 +154,17 @@ BEGIN
     COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
     COALESCE(new.raw_user_meta_data->>'company', 'Meu Supermercado')
   );
+
+  -- Cria categorias padrão para o novo usuário
+  INSERT INTO public.categories (user_id, nome, slug) VALUES
+    (new.id, 'Hortifruti', 'hortifruti'),
+    (new.id, 'Laticínios', 'laticinios'),
+    (new.id, 'Padaria', 'padaria'),
+    (new.id, 'Mercearia', 'mercearia'),
+    (new.id, 'Bebidas', 'bebidas'),
+    (new.id, 'Açougue', 'acougue')
+  ON CONFLICT DO NOTHING;
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
